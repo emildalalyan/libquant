@@ -1,0 +1,19 @@
+1.  If function returns a status, type of that status must be "int", and it must return one of the value from "enum func_status" (see samples.h)
+    But if the function returns its output, then error must be written in "errno" variable.
+
+2.  Don't use unsigned char, short, int, long long, etc where you need exact length, these types vary from the system.
+    Use uint8_t, int16_t, int32_t, int64_t, etc instead.
+
+3.  For samples use slevel_t, because all functions, that are using it, are independent of slevel_t root type. (*)
+    (*) There's only one restriction - root type of slevel_t must be signed integer type.
+
+4.  Don't base your code on that the slevel_t is always 32-bit wide. It may not be.
+    Write your code so, that it's not dependent of slevel_t root type.
+
+5.  Use malloc, calloc, realloc with casting to needed type (it's necessary for compatibility with C++).
+
+6.  All external functions declarations must begin with "CFUNCTION" macro.
+    If C++ compiler is used, it avoids C++ name mangling.
+
+7.  Functions, that use OpenMP should work without enabling OpenMP (it's necessary for
+    compatibility with compilers, that support C99, but don't support OpenMP).
