@@ -2,7 +2,7 @@ COMPILER = gcc
 # Change it to compile a program
 # using different compiler.
 
-OPTIONS = -fopenmp -O3 --std=c17 -lm -shared
+OPTIONS = -fopenmp -O3 --std=c17 -lm -fPIC
 # These options will be passed to compiler.
 # | Options explanation: ===============================|
 # | -fopenmp	| enables OpenMP support.		|
@@ -24,8 +24,11 @@ DEST_FILE = quant
 # Destination executable file.
 
 all: | $(DEST_DIR)
-	@echo [$(COMPILER)] Compiling with options: $(OPTIONS)
-	@$(COMPILER) $(SOURCES) -o $(DEST_DIR)/$(DEST_FILE) $(OPTIONS)
+	@echo [$(COMPILER)] Compiling object files with options: $(OPTIONS)
+	@$(COMPILER) -c $(SOURCES) $(OPTIONS)
+	
+	@echo [$@] Archiving object files into lib$(DEST_FILE).a...
+	@ar rcs $(DEST_DIR)/lib$(DEST_FILE).a *.o
 
 	@echo -------------------------------
 	@echo [$@] Compilation is done!
