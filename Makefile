@@ -2,13 +2,13 @@ COMPILER = gcc
 # Change it to compile a program
 # using different compiler.
 
-OPTIONS = -fopenmp -O3 --std=c17 -lm
+OPTIONS = -fopenmp -O3 --std=c17 -lm -shared
 # These options will be passed to compiler.
 # | Options explanation: ===============================|
-# | -fopenmp	| enables OpenMP support.				|
-# | -O3			| turns extreme optimizations on.		|
-# | --std=c17	| enables C17 support.					|
-# | -lm			| links 'libm' library to executable.	|
+# | -fopenmp	| enables OpenMP support.		|
+# | -O3		| turns extreme optimizations on.	|
+# | --std=c17	| enables C17 support.			|
+# | -lm		| links 'libm' library to executable.	|
 # |=====================================================|
 
 SOURCES = *.c io/*.c effects/*.c synth/*.c
