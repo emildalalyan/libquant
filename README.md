@@ -29,6 +29,11 @@ Current library development period is **Pre-Alpha**.
   - **Noise** (pseudo-noise, uses rand())
   - **Sawtooth**
   - **Silence**
+  
+### Limitations
+- Maximum number of channels is (2^64)-1
+- Maximum sample rate is (2^64)-1 Hz
+- Number of samples is storing as *size_t*, its width depends on platform.
 
 ### Requirements
 - **C99** (**C17** is recommended) or **C++11** compliant compiler.
