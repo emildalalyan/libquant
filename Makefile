@@ -9,10 +9,10 @@ COMPILER = gcc
 OPTIONS = -fopenmp -O3 --std=c17 -lm
 # These options will be passed to compiler.
 # | Options explanation: ===============================|
-# | -fopenmp	| enables OpenMP support.				|
-# | -O3			| turns extreme optimizations on.		|
-# | --std=c17	| enables C17 support.					|
-# | -lm			| links 'libm' library.					|
+# | -fopenmp    | enables OpenMP support.               |
+# | -O3         | turns extreme optimizations on.       |
+# | --std=c17   | enables C17 support.                  |
+# | -lm         | links 'libm' library.                 |
 # |=====================================================|
 
 SOURCES = ../*.c ../io/*.c ../effects/*.c ../synth/*.c
