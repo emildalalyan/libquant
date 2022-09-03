@@ -29,17 +29,17 @@ DEST_FILE = libquant
 
 all: | $(DEST_DIR) $(WORK_DIR)
 # Step 1: Parameters of compilation
-	@echo [$@] Destination library file: $(DEST_DIR)/$(DEST_FILE).a
 	@echo [$@] Working directory: $(WORK_DIR)
+	@echo [$@] Destination library file: $(DEST_DIR)/$(DEST_FILE).a
 	@echo -------------------------------
 
 # Step 2: Compiling object files.
 	@echo [$(COMPILER)] Compiling object files with options: $(OPTIONS)
-	@cd $(WORK_DIR) && @$(COMPILER) -c $(SOURCES) $(OPTIONS)
+	@cd $(WORK_DIR) && $(COMPILER) -c $(SOURCES) $(OPTIONS)
 	
 # Step 3: Archiving object files to get static library.
 	@echo [ar] Archiving object files into $(DEST_FILE).a...
-	@cd $(WORK_DIR) && @ar rcs $(DEST_DIR)/$(DEST_FILE).a *.o
+	@cd $(WORK_DIR) && ar rcs $(DEST_DIR)/$(DEST_FILE).a *.o
 
 # ^^^ We combine commands with cd to be in working directory. ^^^
 
@@ -51,16 +51,16 @@ all: | $(DEST_DIR) $(WORK_DIR)
 	@echo do it manually, because different shells have different
 	@echo commands for file removing.
 	@echo -------------------------------
-# END OF "all: | $(DEST_DIR)"
+# END OF "all"
 
 $(DEST_DIR):
 # Creating destination directory if it's not exist.
 	@echo [$@] Creating destination directory...
 	@mkdir "$@"
-# END OF "$(DEST_DIR):"
+# END OF "$(DEST_DIR)"
 
 $(WORK_DIR):
 # Creating working directory if it's not exist.
 	@echo [$@] Creating working directory...
 	@mkdir "$@"
-# END OF "$(DEST_DIR):"
+# END OF "$(WORK_DIR)"
