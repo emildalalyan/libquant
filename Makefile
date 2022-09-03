@@ -27,7 +27,7 @@ DEST_DIR = ../build
 DEST_FILE = libquant
 # Destination library file.
 
-all: | $(DEST_DIR) $(WORK_DIR)
+all: | $(WORK_DIR)/$(DEST_DIR) $(WORK_DIR)
 # Step 1: Parameters of compilation
 	@echo [$@] Working directory: $(WORK_DIR)
 	@echo [$@] Destination library file: $(DEST_DIR)/$(DEST_FILE).a
@@ -53,11 +53,11 @@ all: | $(DEST_DIR) $(WORK_DIR)
 	@echo -------------------------------
 # END OF "all"
 
-$(DEST_DIR):
+$(WORK_DIR)/$(DEST_DIR):
 # Creating destination directory if it's not exist.
 	@echo [$@] Creating destination directory...
 	@mkdir "$@"
-# END OF "$(DEST_DIR)"
+# END OF "$(WORK_DIR)/$(DEST_DIR)"
 
 $(WORK_DIR):
 # Creating working directory if it's not exist.
