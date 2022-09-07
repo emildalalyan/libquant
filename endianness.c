@@ -8,7 +8,7 @@ CFUNCTION uint16_t swap_16b(uint16_t num)
     #if (defined(ARCH_X86) || defined(ARCH_X86_64)) && defined(SUPPORTS_GCC)
         uint16_t result = 0;
         __asm__("xchg %%al, %%ah" : "=a"(result) : "a"(num));
-        
+
         return result;
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
         uint16_t result = 0;
@@ -31,7 +31,7 @@ CFUNCTION uint32_t swap_32b(uint32_t num)
     #if (defined(ARCH_X86) || defined(ARCH_X86_64)) && defined(SUPPORTS_GCC)
         uint32_t result = 0;
         __asm__("bswap %%eax" : "=a"(result) : "a"(num));
-        
+
         return result;
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
         uint32_t result = 0;
@@ -56,7 +56,7 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
     #if defined(ARCH_X86_64) && defined(SUPPORTS_GCC)
         uint64_t result = 0;
         __asm__("bswap %%rax" : "=a"(result) : "a"(num));
-        
+
         return result;
     #elif defined(ARCH_X86) && defined(SUPPORTS_GCC)
         uint32_t res_high = 0, res_low = 0;
@@ -64,7 +64,7 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
         res_low = num & UINT32_MAX;
         __asm__("bswap %%eax\n"
                 "bswap %%edx" : "=a"(res_high), "=d"(res_low) : "a"(res_high), "d"(res_low));
-        
+
         return (((uint64_t)res_low << 32) | (uint64_t)res_high);
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
         uint32_t res_high = 0, res_low = 0;
@@ -79,7 +79,7 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
             mov res_high, eax
             mov res_low, edx
         }
-        
+
         return (((uint64_t)res_low << 32) | (uint64_t)res_high);
     #else
         return  ((num & 0xFF00000000000000)>>56) |
@@ -100,7 +100,7 @@ CFUNCTION int16_t iswap_16b(int16_t num)
 
     unsint = swap_16b(unsint);
     memcpy(&num, &unsint, sizeof(uint16_t));
-    
+
     return num;
 }
 
@@ -111,7 +111,7 @@ CFUNCTION int32_t iswap_32b(int32_t num)
 
     unsint = swap_32b(unsint);
     memcpy(&num, &unsint, sizeof(uint32_t));
-    
+
     return num;
 }
 
@@ -122,7 +122,7 @@ CFUNCTION int64_t iswap_64b(int64_t num)
 
     unsint = swap_64b(unsint);
     memcpy(&num, &unsint, sizeof(uint64_t));
-    
+
     return num;
 }
 
@@ -133,7 +133,7 @@ CFUNCTION float fswap_32b(float num)
 
     intnum = swap_32b(intnum);
     memcpy(&num, &intnum, sizeof(float));
-    
+
     return num;
 }
 
@@ -144,7 +144,7 @@ CFUNCTION double fswap_64b(double num)
 
     intnum = swap_64b(intnum);
     memcpy(&num, &intnum, sizeof(double));
-    
+
     return num;
 }
 
