@@ -27,8 +27,7 @@ CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header,
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     double step = ((2*MATH_PI)*freq)/(samplerate*channels);
     // Period of sin(x) function is 2*pi
@@ -69,8 +68,7 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     double period = ((double)(samplerate)/freq);
 
@@ -114,8 +112,7 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     double period = (samplerate/freq);
     // Storages square wave signal period.
@@ -155,8 +152,7 @@ CFUNCTION int synth_noise(slevel_t** samples, size_t length)
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
     for(size_t i = 0; i < length; i++)

@@ -17,10 +17,10 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     // number of samples in each channel must be the same.
 
     if(channels > UINT16_MAX || samplerate > UINT32_MAX) return FUNC_UNSUPPORTED;
-    // In WAV files number of channels is writing as 16-bit unsigned integer,
+    // In WAV files number of channels is written as 16-bit unsigned integer,
     // so maximum possible number of channels is 65535.
-    // And sample rate is writing as 32-bit unsigned integer,
-    // so maximum possible samplerate is (2^32)-1 Hz
+    // And sample rate is written as 32-bit unsigned integer,
+    // so maximum possible sample rate is (2^32)-1 Hz
 
     rewind(file);
     // It sets file position to 0th byte.
@@ -170,8 +170,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     int16_t* output = (int16_t*)malloc(length * sizeof(int16_t));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(size_t i = 0; i < length; i++)
@@ -202,8 +201,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // 24-bit integer type.
 
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(size_t i = 0; i < length; i++)
@@ -231,8 +229,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     int32_t* output = (int32_t*)malloc(length * sizeof(int32_t));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(size_t i = 0; i < length; i++)
@@ -283,8 +280,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     float* output = (float*)malloc(length * sizeof(float));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(size_t i = 0; i < length; i++)
@@ -311,8 +307,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     double* output = (double*)malloc(length * sizeof(double));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(size_t i = 0; i < length; i++)
@@ -551,8 +546,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
     
     slevel_t* samplesarr = (slevel_t*)malloc(numsamples * sizeof(slevel_t));
     if(samplesarr == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     *samples = samplesarr;
 
@@ -566,12 +560,11 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                 {
                     int16_t* ogsamples = (int16_t*)malloc(numsamples * sizeof(int16_t));
                     if(ogsamples == NULL)
+                    // If allocation was failed, malloc will return NULL pointer
                     {
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
 
                     if(fread(ogsamples, sizeof(int16_t), numsamples, file) != numsamples)
                     {
@@ -607,8 +600,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, 3, numsamples, file) != numsamples)
                     {
@@ -621,7 +613,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     for(size_t i = 0; i < numsamples; i++)
                     {
                         size_t bytepos = i*3;
-                        int32_t sample =  (ogsamples[bytepos] << 8)
+                        int32_t sample =  (ogsamples[bytepos+0] << 8)
                                         | (ogsamples[bytepos+1] << 16)
                                         | (ogsamples[bytepos+2] << 24);
                         
@@ -639,8 +631,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
                     
                     if(fread(ogsamples, sizeof(int32_t), numsamples, file) != numsamples)
                     {
@@ -689,8 +680,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, sizeof(float), numsamples, file) != numsamples)
                     {
@@ -722,8 +712,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, NULL
-                    // pointer will be returned by malloc
+                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, sizeof(double), numsamples, file) != numsamples)
                     {

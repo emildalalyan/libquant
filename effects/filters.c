@@ -19,8 +19,7 @@ CFUNCTION int effect_medianfilter(slevel_t* samples, size_t length, fheader* hea
 
     slevel_t* result = (slevel_t*)calloc(length, sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     size_t windowright = windowsize/2;
     size_t windowleft = (windowsize/2) + ((windowsize % 2) ? 1 : 0);

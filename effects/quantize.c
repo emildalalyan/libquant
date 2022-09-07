@@ -17,7 +17,7 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
         return FUNC_INTERNAL_ERROR;
 
     slevel_t bitmask = ((combs-1) << (SLEVEL_BIT_DEPTH-depth));
-    // We use masking to selecting only "depth" of bits.
+    // We use bit-masking to select only "depth" of bits.
 
     slevel_t alignbit = ((slevel_t)1 << (SLEVEL_BIT_DEPTH-depth-1));
     // It's alignment bit, it's necessary, because after applying bitmask
@@ -31,10 +31,10 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
     for(size_t i = 0; i < length; i++)
     {
         slevel_t sample = samples[i];
-        
+
         sample &= bitmask;
         sample |= alignbit;
-        // This works only on ones' complement and two's complement machines.
+        // This works only on one's complement and two's complement machines.
 
         samples[i] = sample;
     }

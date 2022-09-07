@@ -21,8 +21,7 @@ CFUNCTION int effect_chamixdown(slevel_t** samples, fheader* header, size_t* len
 
     slevel_t* newsamples = (slevel_t*)malloc(newlength * sizeof(slevel_t));
     if(newsamples == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     uint64_t restchannels = ogchannels - newchannels;
 
@@ -75,8 +74,7 @@ CFUNCTION int effect_chadiff(slevel_t** samples, size_t* length, fheader* header
     slevel_t* result = (slevel_t*)malloc(newlength * sizeof(slevel_t));
     
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
     for(size_t i = 0; i < oglength; i += ogchannels)
@@ -104,8 +102,10 @@ CFUNCTION int effect_chadiff(slevel_t** samples, size_t* length, fheader* header
 
     free((*samples));
     (*samples) = result;
+    // Freeing original samples and setting pointer to new array.
 
     *length = newlength;
+    // Changing the length
 
     return FUNC_OK;
 }

@@ -23,8 +23,7 @@ CFUNCTION int effect_echo(slevel_t* samples, size_t length, fheader* header, siz
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     double* feedb_lut = (double*)malloc(bounces * sizeof(double));
     // We're creating feedbacks lookup table (LUT)
@@ -106,8 +105,7 @@ CFUNCTION int effect_delay(slevel_t* samples, size_t length, fheader* header, si
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
     for(size_t i = 0; i < length; i++)
@@ -123,8 +121,13 @@ CFUNCTION int effect_delay(slevel_t* samples, size_t length, fheader* header, si
         if(mixed > SLEVEL_MAX) result[i] = SLEVEL_MAX;
         else if(mixed < SLEVEL_MIN) result[i] = SLEVEL_MIN;
         else result[i] = (slevel_t)mixed;
-        // Floating point numbers are inaccurate, so we
-        // have to check whether it's out of slevel_t range or not.
+        // Samples with applied delay can be out of slevel_t range,
+        // because delayed signal can be too loud.
+        // And second reason is floating-point numbers. They are inaccurate,
+        // so we have to check whether it's out of slevel_t range or not.
+        // If sample is out of slevel_t range, it will be clipped,
+        // i.e it will set to SLEVEL_MAX or SLEVEL_MIN for positive and negative
+        // sample level respectively.
     }
 
     memcpy(samples, result, (length * sizeof(slevel_t)));
