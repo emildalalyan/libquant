@@ -1,6 +1,6 @@
 #include "build.h"
 
-CFUNCTION const char* build_getcompilername()
+CFUNCTION const char* libquant_getcompilername()
 {
     #if CURRENT_COMPILER == COMPILER_GCC
         const char* name = "GCC";
@@ -17,21 +17,21 @@ CFUNCTION const char* build_getcompilername()
     return name;
 }
 
-CFUNCTION const char* build_getversion()
+CFUNCTION const char* libquant_getversion()
 {
-    const char* version = "1.0-prealpha";
+    const char* version = "1.0-alpha";
 
     return version;
 }
 
-CFUNCTION const char* build_getauthors()
+CFUNCTION const char* libquant_getauthors()
 {
     const char* authors = "Emil Dalalyan";
     
     return authors;
 }
 
-CFUNCTION const char* build_getarchname()
+CFUNCTION const char* libquant_getarchname()
 {
     #if defined(ARCH_X86)
         const char* archname = "x86";
@@ -50,4 +50,11 @@ CFUNCTION const char* build_getarchname()
     #endif
 
     return archname;
+}
+
+CFUNCTION const char* libquant_getdatetime()
+{
+    const char* datetimestr = __DATE__ " " __TIME__;
+    
+    return datetimestr;
 }

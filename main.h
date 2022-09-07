@@ -48,7 +48,6 @@
 #include "measures.h"
 #include "math.h"
 #include "build.h"
-#include "cli.h"
 /* ====================================== */
 
 // Input/output =========================

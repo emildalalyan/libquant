@@ -1,5 +1,12 @@
 #pragma once
 
+// |= Macros usage warning ================================================|
+// | This file contains macros, that can help you to                       |
+// | determine language version, used compiler, and machine architecture.  |
+// | But IT IS COMPILE-TIME MACROS, so it determines above things          |
+// | when translation unit, where "build.h" was included to, is compiling. |
+// |=======================================================================|
+
 #include "functions.h"
 #include <string.h>
 #include <assert.h>
@@ -158,7 +165,7 @@
 /* Assertions =========================== */
 
 #if defined(SUPPORTS_C11) || defined(SUPPORTS_CPP11)
-// C have static_assert beginning from C11. C++ also have this feature beginning from C++11.
+// C has static_assert beginning from C11. C++ also has this feature beginning from C++11.
     static_assert(sizeof(float)  == sizeof(uint32_t), "Single-precision FP is not 32-bit long.");
     static_assert(sizeof(double) == sizeof(uint64_t), "Double-precision FP is not 64-bit long.");
 #endif
@@ -166,16 +173,20 @@
 
 /* ====================================== */
 
-/* Get name of the compiler, that was compiling this program. */
-CFUNCTION const char* build_getcompilername();
+/* Get name of the compiler, that has compiled this library. */
+CFUNCTION const char* libquant_getcompilername();
 
-/* Get program version string. Version and suffix
-   will be dash-separated. */
-CFUNCTION const char* build_getversion();
+/* Get library version string.
+   Version and suffix will be dash-separated. */
+CFUNCTION const char* libquant_getversion();
 
-/* Get program author(s) string. If program have multiple
+/* Get library author(s) string. If library has multiple
    authors, their names will be comma-separated. */
-CFUNCTION const char* build_getauthors();
+CFUNCTION const char* libquant_getauthors();
 
-/* Get name of the architecture for which program was compiled. */
-CFUNCTION const char* build_getarchname();
+/* Get name of the architecture that library was compiled for. */
+CFUNCTION const char* libquant_getarchname();
+
+/* Get date/time of compilation.
+   Date and time will be separated by space. */
+CFUNCTION const char* libquant_getdatetime();
