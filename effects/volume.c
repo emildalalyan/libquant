@@ -57,13 +57,17 @@ CFUNCTION int effect_fadein(slevel_t* samples, size_t length, fheader* header, d
 
     uint64_t channels = header->channels;
 
-    if(channels < 1 || length % channels || duration > (length/channels))
+    if(channels < 1 || length % channels)
     // Length must be multiple of channels, because
     // number of samples in each channel must be the same.
         return FUNC_INVALID_ARG;
 
     size_t loopend = duration*channels;
-    double step = (1-initvolume)/(double)loopend;
+    if(loopend > length) return FUNC_INVALID_ARG;
+    // If end of loop would be greater than length,
+    // then we'd get segmentation fault.
+
+    double step = (1-initvolume)/loopend;
 
     #pragma omp parallel for schedule(static)
     for(size_t i = 0; i < loopend; i += channels)
@@ -88,13 +92,17 @@ CFUNCTION int effect_fadeout(slevel_t* samples, size_t length, fheader* header, 
 
     uint64_t channels = header->channels;
 
-    if(channels < 1 || length % channels || duration > (length/channels))
+    if(channels < 1 || length % channels)
     // Length must be multiple of channels, because
     // number of samples in each channel must be the same.
         return FUNC_INVALID_ARG;
 
     size_t loopend = duration*channels;
-    double step = (1-finalvolume)/(double)(loopend);
+    if(loopend > length) return FUNC_INVALID_ARG;
+    // If end of loop would be greater than length,
+    // then we'd get segmentation fault.
+
+    double step = (1-finalvolume)/loopend;
 
     size_t lastsample = length-1;
     size_t lastchannel = channels-1;

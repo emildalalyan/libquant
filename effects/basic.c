@@ -3,19 +3,16 @@
 CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
 {
     if(samples == NULL || header == NULL) return FUNC_INVALID_ARG;
-    if(header->channels < 1) return FUNC_INVALID_ARG;
-    if(length < header->channels) return FUNC_INVALID_ARG;
-
+    
     uint64_t channels = header->channels;
 
-    if(length % channels) return FUNC_INVALID_ARG;
+    if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Length must be multiple of channels, because
     // number of samples in each channel must be the same.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc.
+    // If allocation was failed, malloc will return NULL pointer
 
     size_t lastsample = length - 1;
     uint64_t lastchannel = channels - 1;
@@ -112,15 +109,14 @@ CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* 
 
     slevel_t* result = (slevel_t*)malloc(newlength * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, NULL
-    // pointer will be returned by malloc
+    // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
     for(size_t i = 0; i < newlength; i++)
     {
         result[i] = ogsamples[(i*ogchannels)+channelnum];
         // We need to multiply i by ogchannels,
-        // because channels are interleaving in samples array.
+        // because channels are interleaved in samples array.
     }
 
     free((*samples));
