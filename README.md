@@ -1,7 +1,7 @@
 ## :sound: libquant
 Open source project aims to make **fast cross-platform non-real-time DSP library**, that supports **multi-threading**.
 
-Current library development period is **Pre-Alpha**.
+Current library development period is **Alpha**.
 
 ### What can libquant do?
 - It has own **CLI interface**, that can read input and write output from/to specific files (FILE*).
