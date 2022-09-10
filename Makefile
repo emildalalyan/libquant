@@ -64,3 +64,9 @@ $(WORK_DIR):
 	@echo [$@] Creating working directory...
 	@mkdir "$@"
 # END OF "$(WORK_DIR)"
+
+# ^^^ Honestly, I don't know how to write directories creating code,   ^^^
+# ^^^ that it would accord KISS principle.                             ^^^
+# ^^^ Make doesn't support recipes arguments, BUT we could bypass it   ^^^
+# ^^^ by setting special variable and by checking it in recipe, BUT    ^^^
+# ^^^ we couldn't be able to use it like a dependency in 'all' recipe. ^^^
