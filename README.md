@@ -42,7 +42,7 @@ Current library development period is **Alpha**.
     - Have 8-bit bytes (**CHAR_BIT** must be 8).
     - Floating-point numbers must meet [IEEE-754](https://wikipedia.org/wiki/IEEE-754) standard.
     - It must be either Big-Endian or Little-Endian.
-- <u>*optional*</u> | Compiler with **OpenMP support**.
+- <u>*for multithreading support*</u> | Compiler with **OpenMP 3.0 support**.
 
 ### Build guide
 #### Microsoft Windows
