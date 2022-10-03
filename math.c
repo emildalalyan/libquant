@@ -8,11 +8,6 @@ CFUNCTION double math_interpolate(interp_method method, double y0, double y1, do
     
     switch(method)
     {
-        case INTERPOLATION_NEAREST:
-        {
-            if(pos < 0.5) return y0;
-            else return y1;
-        }
         case INTERPOLATION_LINEAR:
         {
             return y0+((y1-y0)*pos);
@@ -22,6 +17,13 @@ CFUNCTION double math_interpolate(interp_method method, double y0, double y1, do
             double sine = sin(MATH_PI*pos/2.0);
 
             return y0+((y1-y0)*(sine*sine));
+        }
+        
+        default:
+        case INTERPOLATION_NEAREST:
+        {
+            if(pos < 0.5) return y0;
+            else return y1;
         }
     }
 }
