@@ -4,7 +4,6 @@ Open source project aims to make **fast cross-platform non-real-time DSP library
 Current library development period is **Alpha**.
 
 ### What can libquant do?
-- It has own **CLI interface**, that can read input and write output from/to specific files (FILE*).
 - **Reading and writing** following formats:
     - Microsoft WAV files
       - PCM format (16, 24, 32 bits)
