@@ -16,15 +16,12 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length);
    (i.e. if sample greater than max, it'll be set to max, and so on). */
 CFUNCTION int effect_amplify(slevel_t* samples, size_t length, double ratio);
 
-/* Linear fade in effect.
+/* Fade in/out effect.
    "initvolume" is the initial volume coefficient of the signal.
-   Initial volume coefficient cannot be less than 0, and greater than 1. */
-CFUNCTION int effect_fadein(slevel_t* samples, size_t length, fheader* header, double initvolume, size_t duration);
-
-/* Linear fade out effect.
-   "finalvolume" is the final volume coefficient of the signal.
-   Final volume coefficient cannot be less than 0, and greater than 1. */
-CFUNCTION int effect_fadeout(slevel_t* samples, size_t length, fheader* header, double finalvolume, size_t duration);
+   Initial volume coefficient cannot be less than 0, and greater than 1.
+   If reverse is true, then effect become fade out.
+   Last arguments is the interpolation method, i.e, in this case, intermediate volume finding method. */
+CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, double initvolume, size_t duration, bool reverse, interp_method method);
 
 /* Sound distortion effect (produces clipping effect).
    Max sample level must be positive number or 0.
