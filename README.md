@@ -1,4 +1,4 @@
-## :sound: libquant
+## The Quant Library (libquant)
 Open source project aims to make **fast cross-platform non-real-time DSP library**, that supports **multi-threading**.
 
 Current library development period is **Alpha**.
