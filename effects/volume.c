@@ -78,9 +78,13 @@ CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, dou
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
-            if(reverse) samples[(lastsample-i)-(lastchannel-ci)] *= volume;
-            // We just reverse fade-in algorithm, beginning from last samples.
-            
+            if(reverse)
+            // Condition inside the loop is slower than outside the loop,
+            // BUT condition, that placed inside the loop provides more code readability.
+            {
+                samples[(lastsample-i)-(lastchannel-ci)] *= volume;
+                // We just reverse fade-in algorithm, beginning from last samples.
+            }
             else samples[i+ci] *= volume;
         }
     }
