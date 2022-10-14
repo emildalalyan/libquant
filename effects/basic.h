@@ -8,12 +8,12 @@
 #include "../io/fheaders.h"
 
 /* Sound reverse effect.
-   It reverses the samples position (e.g. first sample become last, and so forth). */
+   It reverses the samples position (e.g. first sample becomes last, and so forth). */
 CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length);
 
 /* Signal invert effect.
    It inverts each sample (i.e it changes sample sign,
-   e.g. positive sample become negative, and so forth). */
+   e.g. positive sample becomes negative, and so forth). */
 CFUNCTION int effect_invert(slevel_t* samples, size_t length);
 
 /* Mutes the signal.
