@@ -40,7 +40,7 @@ CFUNCTION int effect_echo(slevel_t* samples, size_t length, fheader* header, siz
     }
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         double_t sample = samples[i];
         // 'double_t' is most efficient floating-point
@@ -108,7 +108,7 @@ CFUNCTION int effect_delay(slevel_t* samples, size_t length, fheader* header, si
     // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         if(i < shift)
         {

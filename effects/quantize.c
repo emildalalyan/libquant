@@ -6,9 +6,11 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    slevel_t combs = (slevel_t)pow(2, depth);
+    slevel_t combs = (slevel_t)pow(2.0, (double)depth);
     // Number of combinations of I bits: N = 2^I (Hartley Formula)
     // where N - number of combinations, I - number of bits.
+    // Explicit conversion of pow() arguments is added for
+    // compatibility with C++ compilers.
 
     if(dithering && (effect_mixnoise(samples, length, (1.0/combs)) != FUNC_OK))
     // Dithering is just mixing noise before quantization.
@@ -28,7 +30,7 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
     // i.e set previous bit (before last changing bit) to 1.
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         slevel_t sample = samples[i];
 

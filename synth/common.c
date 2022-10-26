@@ -33,7 +33,7 @@ CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header,
     // Period of sin(x) function is 2*pi
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i += channels)
+    for(omp_iter_t i = 0; i < length; i += channels)
     {
         slevel_t sample = f64toslt(sin(i*step));
 
@@ -73,7 +73,7 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     double period = ((double)(samplerate)/freq);
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i += channels)
+    for(omp_iter_t i = 0; i < length; i += channels)
     {
         double sample = ((fmod(i/channels, period)) - (period/2)) * (SLEVEL_MAX/(period/2));
 
@@ -118,7 +118,7 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
     // Storages square wave signal period.
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i += channels)
+    for(omp_iter_t i = 0; i < length; i += channels)
     {
         slevel_t sample = (fmod((i/channels), period) >= (period/2)) ? SLEVEL_MAX : SLEVEL_MIN;
 
@@ -155,7 +155,7 @@ CFUNCTION int synth_noise(slevel_t** samples, size_t length)
     // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         double_t sample = rand();
         // 'double_t' is most efficient floating-point

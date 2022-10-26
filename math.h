@@ -1,12 +1,23 @@
 #pragma once
 
-#include <math.h>
+#if defined(__cplusplus)
+   #include <cmath>
+   // <math.h> usage is considered deprecated in C++.
+   // Some compilers (such as old Microsoft Visual C++)
+   // doesn't even contain <math.h>.
+   // So we use standard <cmath> header.
+#else
+   #include <math.h>
+#endif
+
 #include "build.h"
 
 /* Math constants ============== */
 
 #define MATH_PI 3.1415926535897932
 #define MATH_E  2.71828
+
+#define MATH_LOG2_10 3.32193
 
 /* ============================= */
 

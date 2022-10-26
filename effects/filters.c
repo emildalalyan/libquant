@@ -15,7 +15,7 @@ CFUNCTION int effect_medianfilter(slevel_t* samples, size_t length, fheader* hea
     // Length must be multiple of channels, because number
     // of samples in each channel must be the same.
 
-    if(windowsize > (length / channels)) return FUNC_INVALID_ARG;
+    if(windowsize > (length/channels)) return FUNC_INVALID_ARG;
 
     slevel_t* result = (slevel_t*)calloc(length, sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
@@ -47,7 +47,7 @@ CFUNCTION int effect_medianfilter(slevel_t* samples, size_t length, fheader* hea
         if(lasterrcode == FUNC_OK)
         {
             #pragma omp for schedule(static)
-            for(size_t i = loopstart; i < loopend; i++)
+            for(omp_iter_t i = loopstart; i < loopend; i++)
             {
                 for(size_t wi = 0; wi < windowleft; wi++)
                 {

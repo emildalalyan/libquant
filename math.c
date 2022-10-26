@@ -5,6 +5,8 @@
 CFUNCTION double math_interpolate(interp_method method, double y0, double y1, double pos)
 {
     if(y0 == y1 || pos == 0) return y0;
+    // If difference between two values is 0, or position is 0,
+    // then any interpolation method will result y0.
     
     switch(method)
     {

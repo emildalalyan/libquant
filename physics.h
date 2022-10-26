@@ -11,6 +11,7 @@
 /* All values are measured in SI measures.
    Speed: meters per second (m/s)
    Distance: meters (m)
+   Time: seconds (s)
    etc. */
 
 /* Sound speed macros ============== */
@@ -27,7 +28,7 @@
    If invalid arguments was provided, then errno will be equate to EINVAL. */
 CFUNCTION double physics_sndpropagationtime(double distance, double soundspeed);
 
-/* Constant echo feedback of different materials. === */
+/* Constant echo feedback of different materials ==== */
 #define PHYS_ECHO_FEEDB_ACOUSTOLITE 0.64
 #define PHYS_ECHO_FEEDB_CONCRETE 0.985
 #define PHYS_ECHO_FEEDB_GLASS 0.973

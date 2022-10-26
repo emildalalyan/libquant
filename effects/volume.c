@@ -6,6 +6,7 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length)
     if(length < 1) return FUNC_INVALID_ARG;
 
     slevel_t maxabs = samples_findmaxabs(samples, length);
+    // Finding maximum absolute value from array of samples.
 
     if(errno != 0) return FUNC_INTERNAL_ERROR;
     // samples_findmaxabs() sets errno to EINVAL if invalid
@@ -16,6 +17,9 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length)
     // amplify the signal (multiply samples).
 
     double amp_ratio = ((double)SLEVEL_MAX/(double)maxabs);
+    // Amplify ratio is the ratio of SLEVEL_MAX to maximum
+    // absolute value (i.e factor, at which the modulo of
+    // maximum sample will be equal SLEVEL_MAX).
 
     return effect_amplify(samples, length, amp_ratio);
 }
@@ -28,7 +32,7 @@ CFUNCTION int effect_amplify(slevel_t* samples, size_t length, double ratio)
     if(ratio == 1) return FUNC_OK;
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         if(samples[i] == 0) continue;
 
@@ -72,9 +76,9 @@ CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, dou
     // These variables are used ONLY if reverse is true.
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < loopend; i += channels)
+    for(omp_iter_t i = 0; i < loopend; i += channels)
     {
-        double volume = math_interpolate(method, initvolume, 1, ((double)i/loopend));
+        double volume = math_interpolate(method, initvolume, 1.0, ((double)i/loopend));
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
@@ -98,7 +102,7 @@ CFUNCTION int effect_distort(slevel_t* samples, size_t length, slevel_t max, sle
     if(max < 0 || min > 0) return FUNC_INVALID_ARG;
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         if(samples[i] > max) samples[i] = max;
         else if(samples[i] < min) samples[i] = min;

@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include "fheaders.h"
 #include "../samples.h"
 #include "../endianness.h"

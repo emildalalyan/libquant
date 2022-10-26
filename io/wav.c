@@ -34,7 +34,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(fseek(file, sizeof(uint32_t), SEEK_CUR))
     // We'll write file size after writing all data.
         return FUNC_IO_ERROR;
-    
+
     if(fwrite(WAVE_SIGNWAVFORMAT, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
     // It writes WAV format sign.
         return FUNC_IO_ERROR;
@@ -42,7 +42,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     uint32_t riffchunksize = ftell(file);
     // RIFF chunk size matches current file position, because
     // this chunk are first in the file.
-    
+
     /* ================= */
 
     /* Format subchunk = */
@@ -127,7 +127,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(fseek(file, fmtchunkend, SEEK_SET))
     // Returning back to end of format chunk.
         return FUNC_IO_ERROR;
-        
+
     /* ================= */
 
     /* Data subchunk === */
@@ -135,13 +135,13 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(fwrite(WAVE_SIGNDATACHUNK, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
     // It writes data subchunk sign.
         return FUNC_IO_ERROR;
-    
+
     if(fseek(file, sizeof(uint32_t), SEEK_CUR))
     // We'll write subchunk size after writing all data.
         return FUNC_IO_ERROR;
 
     uint32_t headerlength = ftell(file);
-    
+
     // This is the end of header.
 
     switch(format)
@@ -157,11 +157,10 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
             if(length > maxlength/(depth/8u))
             {
                 length = maxlength/(depth/8u);
+                // Truncating file to maximum size.
 
                 length -= (length % channels);
                 // Each channel must have the same number of samples.
-                
-                // Truncating file to maximum size.
             }
 
             switch(depth)
@@ -173,7 +172,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < length; i++)
+                    for(omp_iter_t i = 0; i < length; i++)
                     {
                         int16_t sample = slttoi16(samples[i]);
 
@@ -204,7 +203,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < length; i++)
+                    for(omp_iter_t i = 0; i < length; i++)
                     {
                         int32_t sample = slttoi24(samples[i]);
                         
@@ -232,7 +231,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < length; i++)
+                    for(omp_iter_t i = 0; i < length; i++)
                     {
                         int32_t sample = slttoi32(samples[i]);
 
@@ -267,11 +266,10 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
             if(length > maxlength/(depth/8))
             {
                 length = maxlength/(depth/8);
+                // Truncating file to maximum size.
 
                 length -= (length % channels);
                 // Each channel must have the same number of samples.
-                
-                // Truncating file to maximum size.
             }
 
             switch(depth)
@@ -283,7 +281,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < length; i++)
+                    for(omp_iter_t i = 0; i < length; i++)
                     {
                         float sample = slttof32(samples[i]);
 
@@ -310,7 +308,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < length; i++)
+                    for(omp_iter_t i = 0; i < length; i++)
                     {
                         double sample = slttof64(samples[i]);
 
@@ -574,7 +572,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     }
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < numsamples; i++)
+                    for(omp_iter_t i = 0; i < numsamples; i++)
                     {
                         int16_t sample = ogsamples[i];
 
@@ -610,7 +608,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     }
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < numsamples; i++)
+                    for(omp_iter_t i = 0; i < numsamples; i++)
                     {
                         size_t bytepos = i*3;
                         int32_t sample =  (ogsamples[bytepos+0] << 8)
@@ -641,7 +639,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     }
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < numsamples; i++)
+                    for(omp_iter_t i = 0; i < numsamples; i++)
                     {
                         int32_t sample = ogsamples[i];
 
@@ -690,7 +688,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     }
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < numsamples; i++)
+                    for(omp_iter_t i = 0; i < numsamples; i++)
                     {
                         float sample = ogsamples[i];
                         
@@ -722,7 +720,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     }
 
                     #pragma omp parallel for schedule(static)
-                    for(size_t i = 0; i < numsamples; i++)
+                    for(omp_iter_t i = 0; i < numsamples; i++)
                     {
                         double sample = ogsamples[i];
 

@@ -22,7 +22,55 @@
     // C++ name mangling, because compiler doesn't mangle names.
 #endif
 
+/* Language detection ========== */
+
+#if defined(__cplusplus)
+    #if defined(_MSVC_LANG)
+        #if _MSVC_LANG >= 199711L
+            #define SUPPORTS_CPP98 1
+        #endif
+        #if _MSVC_LANG >= 201103L
+            #define SUPPORTS_CPP11 1
+        #endif
+
+        // Microsoft Visual C++ defines __cplusplus
+        // as 199711L by default, even if compiler
+        // supports C++11. But since Visual C++ 2015,
+        // compiler defines _MSVC_LANG macro,
+        // that contains real language standard number.
+    #else
+        #if __cplusplus >= 199711L
+            #define SUPPORTS_CPP98 1
+        #endif
+        #if __cplusplus >= 201103L
+            #define SUPPORTS_CPP11 1
+        #endif
+    #endif
+#elif defined(__STDC_VERSION__)
+    #if __STDC_VERSION__ >= 199901L
+        #define SUPPORTS_C99 1
+    #endif
+    #if __STDC_VERSION__ >= 201112L
+        #define SUPPORTS_C11 1
+    #endif
+    #if __STDC_VERSION__ >= 201710L
+        #define SUPPORTS_C17 1
+    #endif
+#endif
+// Features support detection.
+
+#if !defined(SUPPORTS_C99) && !defined(SUPPORTS_CPP11)
+    #error This compiler does support neither C99 or C++11 standards. Comment this line to attempt to compile.
+
+    #include "c99defines.h"
+    // Some of the defines are machine-dependent or compiler-dependent,
+    // so check this header to get things right.
+#endif
+
+/* ============================= */
+
 /* Compiler detection ========== */
+
 #define COMPILER_GCC 0
 #define COMPILER_CLANG 1
 #define COMPILER_ICC 2
@@ -69,14 +117,22 @@
     // If the compiler defines _MSC_VER,
     // then it supports MSVC stuff (like inline assembler).
 
-    #define _CRT_SECURE_NO_WARNINGS 1
-    // We should suppress errors about non-secure functions.
-    // "*_s" functions are Microsoft-specific, so we can't use it.
+    #if !defined(_CRT_SECURE_NO_WARNINGS)
+        #define _CRT_SECURE_NO_WARNINGS 1
+        // We should suppress errors about non-secure functions.
+        // "*_s" functions are Microsoft-specific, so we can't use it.
+    #endif
 
-    #define COMPILER_WARNING(msg) DO_PRAGMA(message( msg ))
-    // Warning directive are compiler-specific, so we
-    // have to replace COMPILER_WARNING
-    // to compiler-specific warning.
+    #if (defined(SUPPORTS_CPP11) || defined(SUPPORTS_C99))
+        #define COMPILER_WARNING(msg) DO_PRAGMA(message( msg ))
+        // Warning directive are compiler-specific, so we
+        // have to replace COMPILER_WARNING
+        // to compiler-specific warning.
+    #else
+        #define COMPILER_WARNING(msg) 
+        // Old Microsoft Visual C++ doesn't support _Pragma operator,
+        // which was introduced with C99 standard.
+    #endif
 #else
     #define CURRENT_COMPILER COMPILER_UNKNOWN
     // Compiler couldn't be determined.
@@ -87,48 +143,6 @@
 #endif
 /* ============================= */
 
-/* Language detection ========== */
-
-#if defined(__cplusplus)
-    #if defined(_MSVC_LANG)
-        #if _MSVC_LANG >= 199711L
-            #define SUPPORTS_CPP98 1
-        #endif
-        #if _MSVC_LANG >= 201103L
-            #define SUPPORTS_CPP11 1
-        #endif
-    
-        // Microsoft Visual C++ defines __cplusplus
-        // as 199711L by default, even if compiler
-        // supports C++11. But since Visual C++ 2015,
-        // compiler defines _MSVC_LANG macro,
-        // that contains real language standard number.
-    #else
-        #if __cplusplus >= 199711L
-            #define SUPPORTS_CPP98 1
-        #endif
-        #if __cplusplus >= 201103L
-            #define SUPPORTS_CPP11 1
-        #endif
-    #endif
-#elif defined(__STDC_VERSION__)
-    #if __STDC_VERSION__ >= 199901L
-        #define SUPPORTS_C99 1
-    #endif
-    #if __STDC_VERSION__ >= 201112L
-        #define SUPPORTS_C11 1
-    #endif
-    #if __STDC_VERSION__ >= 201710L
-        #define SUPPORTS_C17 1
-    #endif
-#endif
-// Features support detection.
-
-#if !defined(SUPPORTS_C99) && !defined(SUPPORTS_CPP11)
-    COMPILER_WARNING("This code may not compile, because compiler does not support neither C99 features nor C++11 features.")
-#endif
-
-/* ============================= */
 
 /* Architecture detection ====== */
 #if defined(_M_IX86) || defined(__i386__)
@@ -166,10 +180,12 @@
 
 #if defined(SUPPORTS_C11) || defined(SUPPORTS_CPP11)
 // C has static_assert beginning from C11. C++ also has this feature beginning from C++11.
+
     static_assert(sizeof(float)  == sizeof(uint32_t), "Single-precision FP is not 32-bit long.");
     static_assert(sizeof(double) == sizeof(uint64_t), "Double-precision FP is not 64-bit long.");
+    // Checking, whether floating-point numbers types meet IEEE 754 standard or not.
+
 #endif
-// Checking, whether floating-point numbers types meet IEEE 754 standard or not.
 
 /* ====================================== */
 

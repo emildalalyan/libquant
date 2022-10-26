@@ -29,6 +29,16 @@ CFUNCTION int32_t iswap_32b(int32_t num);
 /* Swap 8 bytes in specified signed number */
 CFUNCTION int64_t iswap_64b(int64_t num);
 
+#if defined(CHAR_BIT) && CHAR_BIT != 8
+    #error This machine has non-8-bit byte, so this machine is not supported.
+#endif
+
+/* Endianness detection macros ======= */
+
+/* Use this to change default endianness,
+   in the case, when endianness cannot be determined. */
+#define DEFAULT_ENDIANNESS __ORDER_LITTLE_ENDIAN__
+
 #if !defined(__ORDER_LITTLE_ENDIAN__)
     #define __ORDER_LITTLE_ENDIAN__ 1234
 #endif
@@ -42,11 +52,6 @@ CFUNCTION int64_t iswap_64b(int64_t num);
 #endif
 // These macros are not defined in MSVC.
 
-#if defined(CHAR_BIT) && CHAR_BIT != 8
-    #error This machine has non-8-bit byte, so this machine is not supported.
-#endif
-
-/* With these macros, you can get machine endianness. */
 #if defined(__BYTE_ORDER__)
     #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
         #define ENDIANNESS __ORDER_LITTLE_ENDIAN__
@@ -59,10 +64,12 @@ CFUNCTION int64_t iswap_64b(int64_t num);
         #error Machine endianness is unsupported.
     #endif
 #else
-    COMPILER_WARNING("Machine endianness is not defined, by default it is little-endian")
+    #define ENDIANNESS DEFAULT_ENDIANNESS
 
-    #define ENDIANNESS __ORDER_LITTLE_ENDIAN__
+    COMPILER_WARNING("Machine endianness is not defined, it has been set to default")
 #endif
+
+/* =================================== */
 
 /* Get string name of used byte-order (endianness). */
 CFUNCTION const char* endianness_getname();

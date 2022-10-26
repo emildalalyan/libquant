@@ -1,6 +1,11 @@
 #pragma once
 
-#include <stdbool.h>
+#if !defined(__cplusplus)
+   #include <stdbool.h>
+   // C++ already defines boolean type,
+   // so we don't need to include this file.
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include <float.h>
@@ -9,8 +14,11 @@
 #include "functions.h"
 #include "build.h"
 #include <errno.h>
-#include <inttypes.h>
 #include <stdlib.h>
+
+#if defined(SUPPORTS_C99) || defined(SUPPORTS_CPP11)
+   #include <inttypes.h>
+#endif
 
 /* This is the type of sample levels. It must be signed integer type. */
 typedef int32_t slevel_t;
@@ -34,12 +42,12 @@ typedef int32_t slevel_t;
 // Format, that may be used in following
 // functions: printf, sscanf, etc.
 
-/* 24-bit integer type is missing in C, but some audio files are 24-bit,
-   so these definitions is introduced for code readability. */
 #define INT24_MAX 8388607
 #define INT24_MIN -8388608
 #define UINT24_MAX 16777215
 #define UINT24_MIN 0
+// 24-bit integer type is missing in C, but some audio files are 24-bit,
+// so these definitions is introduced for code readability.
 
 /* Convert 16-bit signed integer (sample) to slevel_t format. */
 CFUNCTION slevel_t i16toslt(int16_t sample);
@@ -94,5 +102,9 @@ CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length);
    Function does not check whether pointers are NULL or not, so if NULL
    pointers was provided, then you'll get segmentation fault.
    This is because of performance, if this function is using in sorting algorithm,
-   then it will be called multiple times, and with checks we'd performance. */
+   then it will be called multiple times, and checks would reduce performance. */
 CFUNCTION int samples_compare(const slevel_t* first, const slevel_t* second);
+
+/* Returns absolute value of sample,
+   i.e if sample is negative, then this function will change its sign. */
+CFUNCTION slevel_t sltabs(slevel_t sample);

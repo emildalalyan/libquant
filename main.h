@@ -9,14 +9,6 @@
 #include <time.h>
 #include "math.h"
 
-#if defined(__cplusplus)
-    #define __STDC_FORMAT_MACROS 1
-    // In C++, "inttypes.h" doesn't define format macros (e.g. PRIu64) by default, so
-    // we should define __STDC_FORMAT_MACROS before including "inttypes.h"
-#endif
-
-#include <inttypes.h>
-
 /* Count the time of expression execution, and
    write the result to "counted" variable (of type "double").
    It will be measured in seconds. */
@@ -34,7 +26,7 @@
         expression; \
         counted = difftime(time(NULL), start); \
     }
-    // In Windows, clock() returns process life time. 
+    // In Windows, clock() returns process life time.
     // In *nix systems, clock() returns CPU time (of all threads),
     // that has been spent on process execution,
     // so we have to use time() in *nix systems to calculate
@@ -64,6 +56,7 @@
 #include "effects/compressor.h"
 #include "effects/filters.h"
 #include "effects/stretch.h"
+#include "effects/resampling.h"
 
 // Sound generators (synthesizers) ======
 #include "synth/common.h"

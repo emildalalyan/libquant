@@ -159,22 +159,22 @@ CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
 
     slevel_t maxabs = 0;
 
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         if(samples[i] == SLEVEL_MIN || samples[i] == SLEVEL_MAX)
-        // (slevel_t)imaxabs(SLEVEL_MIN) on 2's complement machines causes integer overflow,
-        // so we're bypassing it. And if sample equals SLEVEL_MAX or SLEVEL_MIN, then we don't need
-        // to search further, because slevel_t cannot be greater than SLEVEL_MAX and less than SLEVEL_MIN.
+        // If sample equals SLEVEL_MAX or SLEVEL_MIN, then we don't need
+        // to search further, because slevel_t cannot be greater
+        // than SLEVEL_MAX or less than SLEVEL_MIN.
         {
             maxabs = SLEVEL_MAX;
-            // imaxabs(SLEVEL_MIN) (or SLEVEL_MAX) is maximum
-            // possible number, that can be found in array of slevel_t.
+            // SLEVEL_MAX is the maximum possible absolute
+            // number, that can be found in array of slevel_t.
 
             break;
         }
         else
         {
-            slevel_t abs_sample = (slevel_t)imaxabs(samples[i]);
+            slevel_t abs_sample = sltabs(samples[i]);
             
             if(abs_sample > maxabs) maxabs = abs_sample;
         }
@@ -191,4 +191,14 @@ CFUNCTION int samples_compare(const slevel_t* first, const slevel_t* second)
     if(val_first == val_second) return 0;
     else if(val_first > val_second) return 1;
     else return -1;
+}
+
+CFUNCTION slevel_t sltabs(slevel_t sample)
+{
+    if(sample == SLEVEL_MIN) return SLEVEL_MAX;
+    // On two's complement machines, -SLEVEL_MIN causes
+    // integer overflow, so we have to bypass this.
+
+    if(sample < 0) return -sample;
+    else return sample;
 }

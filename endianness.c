@@ -62,14 +62,19 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
         uint32_t res_high = 0, res_low = 0;
         res_high = (num >> 32) & UINT32_MAX;
         res_low = num & UINT32_MAX;
+        // We divide 64-bit number into low and high 32-bit words.
+        
         __asm__("bswap %%eax\n"
                 "bswap %%edx" : "=a"(res_high), "=d"(res_low) : "a"(res_high), "d"(res_low));
 
         return (((uint64_t)res_low << 32) | (uint64_t)res_high);
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
         uint32_t res_high = 0, res_low = 0;
+
         res_high = (num >> 32) & UINT32_MAX;
         res_low = num & UINT32_MAX;
+        // We divide 64-bit number into low and high 32-bit words.
+
         __asm
         {
             mov eax, res_high

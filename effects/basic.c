@@ -18,7 +18,7 @@ CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
     uint64_t lastchannel = channels - 1;
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i += channels)
+    for(omp_iter_t i = 0; i < length; i += channels)
     {
         for(uint64_t ci = 0; ci < channels; ci++)
         {
@@ -38,7 +38,7 @@ CFUNCTION int effect_invert(slevel_t* samples, size_t length)
     if(samples == NULL || length < 1) return FUNC_INVALID_ARG;
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         if(samples[i] == SLEVEL_MIN) samples[i] = SLEVEL_MAX;
         // On two's complement systems, -SLEVEL_MIN causes integer overflow.
@@ -66,7 +66,7 @@ CFUNCTION int effect_mixnoise(slevel_t* samples, size_t length, double noisevolu
     // If volume of the noise is 0, then noise will be muted.
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < length; i++)
+    for(omp_iter_t i = 0; i < length; i++)
     {
         double rndnum = (rand()-(RAND_MAX/2.0))*(SLEVEL_MAX/(RAND_MAX/2.0));
         // We use (RAND_MAX/2.0), and not (RAND_MAX/2), for implicit
@@ -83,7 +83,7 @@ CFUNCTION int effect_mixnoise(slevel_t* samples, size_t length, double noisevolu
         else samples[i] = mixed;
         // Floating-point numbers are inaccurate, so we have to check
         // whether it's out of slevel_t range, or not.
-        // Second reason is noise level, it can be large, so we should clip
+        // Second reason is noise level, it can be loud, so we should clip
         // levels to avoid integer overflows.
     }
 
@@ -112,7 +112,7 @@ CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* 
     // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
-    for(size_t i = 0; i < newlength; i++)
+    for(omp_iter_t i = 0; i < newlength; i++)
     {
         result[i] = ogsamples[(i*ogchannels)+channelnum];
         // We need to multiply i by ogchannels,
