@@ -35,13 +35,17 @@ Current library development period is **Alpha**.
 - Number of samples is storing as *size_t*, its width **depends on platform.**
 - Each channel must have the same number of samples.
 
+**Remark**: When you use OpenMP 2.0 (or older version), then samples iterator will be **long long**.
+
 ### Requirements
 - **C99** (**C17** is recommended) or **C++11** compliant compiler.
 - Target architecture must:
     - Have 8-bit bytes (**CHAR_BIT** must be 8).
     - Floating-point numbers must meet [IEEE-754](https://wikipedia.org/wiki/IEEE-754) standard.
     - It must be either Big-Endian or Little-Endian.
-- <u>*for multithreading support*</u> | Compiler with **OpenMP 3.0 support**.
+- <u>*for multithreading support*</u> | Compiler with **OpenMP 2.0 support** (OpenMP **3.0** is recommended).
+
+**Remark**: Some compilers, that support C++11 **partially** also can compile libquant.
 
 ### Build guide
 #### Microsoft Windows
