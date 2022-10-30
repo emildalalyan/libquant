@@ -198,5 +198,5 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
     else return sample;
     // By definition, modulus of the number N
     // is the -N, if N is negative
-    // and just N, if N is positive
+    // and just N, if N is positive or 0
 }
