@@ -17,14 +17,9 @@ CFUNCTION slevel_t i24toslt(int32_t sample)
 {
     if(sample == 0) return (slevel_t)0;
 
-    if(sample & UINT8_MAX)
-    // Checking, that number is actually 24-bit, and
-    // doesn't use first byte of the 4-byte integer
-    {
-        errno = EINVAL;
-        return (slevel_t)0;
-    }
-    else errno = 0;
+    if(sample & UINT8_MAX) sample &= ~UINT8_MAX;
+    // If value of the first byte is not 0, then
+    // we just fill it with zeros.
     
     #if SLEVEL_BIT_DEPTH >= 32
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-32));
@@ -201,4 +196,7 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
 
     if(sample < 0) return -sample;
     else return sample;
+    // By definition, modulus of the number N
+    // is the -N, if N is negative
+    // and just N, if N is positive
 }
