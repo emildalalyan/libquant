@@ -14,6 +14,7 @@ Current library development period is **Alpha**.
   - **Reverse**
   - **Quantization** (supports dithering)
   - **Inverting**
+  - **Fade effect** (linear or sine)
   - **Median filter**
   - **Echo** (without equalization)
   - **Delay** (single echo effect)
