@@ -101,6 +101,10 @@ CFUNCTION int effect_distort(slevel_t* samples, size_t length, slevel_t max, sle
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(max < 0 || min > 0) return FUNC_INVALID_ARG;
 
+    if(max == SLEVEL_MAX && min == SLEVEL_MIN) return FUNC_OK;
+    // Samples are already in range of [SLEVEL_MIN, SLEVEL_MAX],
+    // so we can just don't clip them.
+
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i++)
     {

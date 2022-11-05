@@ -66,7 +66,6 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     // For explanation, see line 3.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
-    
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
     // If allocation was failed, malloc will return NULL pointer
 
@@ -110,7 +109,6 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
     // For explanation, see line 3.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
-    
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
     // If allocation was failed, malloc will return NULL pointer
 

@@ -41,3 +41,16 @@ CFUNCTION double math_logbase(double num, double base)
 }
 
 /* ============================= */
+
+/* Trigonometry ================ */
+
+CFUNCTION double math_sinc(double x)
+{
+    if(x == 0) return 1;
+    // sinc(0) is 1 by definition.
+    // It's defined as the limit (x->0) of sin(x)/x function.
+
+    return sin(x)/x;
+}
+
+/* ============================= */

@@ -62,7 +62,7 @@
 #if !defined(SUPPORTS_C99) && !defined(SUPPORTS_CPP11)
     #error This compiler does support neither C99 or C++11 standards. Comment this line to attempt to compile.
 
-    #include "c99defines.h"
+    #include "c99defs.h"
     // Some of the defines are machine-dependent or compiler-dependent,
     // so check this header to get things right.
 #endif
@@ -173,6 +173,11 @@
 #if defined(__e2k__)
     #define ARCH_E2K 1
     // 64-bit Elbrus CPU.
+#endif
+
+#if defined(__mips__)
+    #define ARCH_MIPS 1
+    // 32/64-bit MIPS CPU.
 #endif
 /* ============================= */
 

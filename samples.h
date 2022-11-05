@@ -79,12 +79,12 @@ CFUNCTION int32_t slttoi24(slevel_t sample);
 CFUNCTION int32_t slttoi32(slevel_t sample);
 
 /* Convert slevel_t format sample to 32-bit floating-point number.
-   Resulting number will be in range of [-1,1], i.e it won't be
+   Resulting number will be in range [-1,1], i.e it won't be
    greater than 1, and less than -1. */
 CFUNCTION float slttof32(slevel_t sample);
 
 /* Convert slevel_t format sample to 64-bit floating-point number.
-   Resulting number will be in range of [-1,1], i.e it won't be
+   Resulting number will be in range [-1,1], i.e it won't be
    greater than 1, and less than -1. */
 CFUNCTION double slttof64(slevel_t sample);
 

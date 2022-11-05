@@ -45,6 +45,8 @@ CFUNCTION const char* libquant_getarchname()
         const char* archname = "powerpc";
     #elif defined(ARCH_E2K)
         const char* archname = "e2k";
+    #elif defined(ARCH_MIPS)
+        const char* archname = "mips";
     #else
         const char* archname = "unknown";
     #endif

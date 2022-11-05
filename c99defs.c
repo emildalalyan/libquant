@@ -1,6 +1,6 @@
 #include "build.h"
 
-#if !defined(SUPPORTS_C99) || !defined(SUPPORTS_CPP11)
+#if !defined(SUPPORTS_C99) && !defined(SUPPORTS_CPP11)
 // These functions implementations should exist ONLY
 // if standard library doesn't have them.
 // Otherwise, C99/C++11 compilers confuse with

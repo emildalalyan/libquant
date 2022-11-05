@@ -15,16 +15,15 @@
 
 /* Floating-point types definition ============ */
 
-#if !defined(FLT_EVAL_METHOD)
-    typedef double double_t;
-    typedef float float_t;
-    // Changing of these types can result to increasing
-    // or decreasing performance.
-    // But after changing these types, you have to change
-    // FLT_EVAL_METHOD define value.
-    
-    #define FLT_EVAL_METHOD 0
-#endif
+typedef double double_t;
+typedef float float_t;
+// Changing of these types can result to increasing
+// or decreasing performance.
+// But after changing these types, you have to change
+// FLT_EVAL_METHOD definition value.
+
+#undef FLT_EVAL_METHOD
+#define FLT_EVAL_METHOD 0
 
 /* ============================================ */
 

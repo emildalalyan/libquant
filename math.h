@@ -62,7 +62,16 @@ CFUNCTION double math_interpolate(interp_method method, double y0, double y1, do
 
 /* Logarithm =================== */
 
-/* Calculate the "base" logarithm of number "num". */
+/* Calculates the "base" logarithm of number "num". */
 CFUNCTION double math_logbase(double num, double base);
+
+/* ============================= */
+
+/* Trigonometry ================ */
+
+/* Calculates unnormalized cardinal sine function.
+   Its formula is (sin(x)/x) if x is not 0,
+   otherwise it's 1 by definition. */
+CFUNCTION double math_sinc(double x);
 
 /* ============================= */

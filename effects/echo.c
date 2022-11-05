@@ -44,7 +44,7 @@ CFUNCTION int effect_echo(slevel_t* samples, size_t length, fheader* header, siz
     {
         double_t sample = samples[i];
         // 'double_t' is most efficient floating-point
-        // type, at least as wide as double. 
+        // type, that at least as wide as double. 
 
         for(size_t si = 1; si <= bounces; si++)
         {
