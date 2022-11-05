@@ -22,7 +22,9 @@ typedef float float_t;
 // But after changing these types, you have to change
 // FLT_EVAL_METHOD definition value.
 
-#undef FLT_EVAL_METHOD
+#if defined(FLT_EVAL_METHOD)
+    #undef FLT_EVAL_METHOD
+#endif
 #define FLT_EVAL_METHOD 0
 
 /* ============================================ */
