@@ -1,13 +1,17 @@
 #pragma once
 
-/* Including standard headers */
+/* Including standard headers =========== */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
-#include "math.h"
+
+/* ====================================== */
+
+/* Definitions ========================== */
 
 /* Count the time of expression execution, and
    write the result to "counted" variable (of type "double").
@@ -34,19 +38,27 @@
 #endif
 
 /* ====================================== */
+
+/* Common headers ======================= */
+
 #include "endianness.h"
 #include "samples.h"
 #include "physics.h"
 #include "measures.h"
 #include "math.h"
 #include "build.h"
+
 /* ====================================== */
 
-// Input/output =========================
+/* Input/output ========================= */
+
 #include "io/fheaders.h"
 #include "io/wav.h"
 
-// Sound effects ========================
+/* ====================================== */
+
+/* Sound effects ======================== */
+
 #include "effects/quantize.h"
 #include "effects/mixing.h"
 #include "effects/volume.h"
@@ -58,5 +70,10 @@
 #include "effects/stretch.h"
 #include "effects/resampling.h"
 
-// Sound generators (synthesizers) ======
+/* ====================================== */
+
+/* Sound generators (synthesizers) ====== */
+
 #include "synth/common.h"
+
+/* ====================================== */

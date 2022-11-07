@@ -18,9 +18,21 @@
     // C++ name mangling (or name decoration).
 #else
     #define CFUNCTION extern
-    // But if the code is compiling as C code, we don't need to avoid
+    // If the code is compiling as C code, we don't need to avoid
     // C++ name mangling, because compiler doesn't mangle names.
 #endif
+
+/* Versioning ================== */
+
+/* This is the structure, that is using for transfering the program version. */
+typedef struct program_ver
+{
+    uint32_t major;
+    uint32_t minor;
+    const char* suffix;
+} program_ver;
+
+/* ============================= */
 
 /* Language detection ========== */
 
@@ -197,9 +209,8 @@
 /* Get name of the compiler, that has compiled this library. */
 CFUNCTION const char* libquant_getcompilername();
 
-/* Get library version string.
-   Version and suffix will be dash-separated. */
-CFUNCTION const char* libquant_getversion();
+/* Get library version structure (see "struct program_ver"). */
+CFUNCTION const program_ver libquant_getversion();
 
 /* Get library author(s) string. If library has multiple
    authors, their names will be comma-separated. */

@@ -17,9 +17,13 @@ CFUNCTION const char* libquant_getcompilername()
     return name;
 }
 
-CFUNCTION const char* libquant_getversion()
+CFUNCTION const program_ver libquant_getversion()
 {
-    const char* version = "1.0-alpha";
+    const program_ver version = {
+        .major = 1,
+        .minor = 0,
+        .suffix = "alpha"
+    };
 
     return version;
 }
