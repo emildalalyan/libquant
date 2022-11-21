@@ -17,6 +17,12 @@
 #include <stdlib.h>
 
 #if defined(SUPPORTS_C99) || defined(SUPPORTS_CPP11)
+   #if defined(__cplusplus)
+      #define __STDC_FORMAT_MACROS 1
+      // In C++, inttypes.h defines format macros
+      // ONLY if this definition exists.
+   #endif
+
    #include <inttypes.h>
 #endif
 
