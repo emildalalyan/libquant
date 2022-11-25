@@ -6,11 +6,10 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    slevel_t combs = (slevel_t)pow(2.0, (double)depth);
+    slevel_t combs = (slevel_t)(1 << depth);
     // Number of combinations of I bits: N = 2^I (Hartley Formula)
     // where N - number of combinations, I - number of bits.
-    // Explicit conversion of pow() arguments is added for
-    // compatibility with C++ compilers.
+    // But in binary code, we can just shift 1 left by I bits, and we'll get 2^I.
 
     if(dithering && (effect_mixnoise(samples, length, (1.0/combs)) != FUNC_OK))
     // Dithering is just mixing noise before quantization.
