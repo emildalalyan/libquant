@@ -6,7 +6,7 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    slevel_t combs = (slevel_t)(1 << depth);
+    slevel_t combs = ((slevel_t)1 << depth);
     // Number of combinations of I bits: N = 2^I (Hartley Formula)
     // where N - number of combinations, I - number of bits.
     // But in binary code, we can just shift 1 left by I bits, and we'll get 2^I.
