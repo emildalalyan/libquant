@@ -41,9 +41,10 @@ Current library development period is **Alpha**.
 ### Requirements
 - **C99** (**C17** is recommended) or **C++11** compliant compiler.
 - Target architecture must:
-    - Have 8-bit bytes (**CHAR_BIT** must be 8).
-    - Floating-point numbers must meet [IEEE-754](https://wikipedia.org/wiki/IEEE-754) standard.
-    - It must be either Big-Endian or Little-Endian.
+    - Have <ins>8-bit bytes</ins> (CHAR_BIT must be 8).
+    - Meet [<ins>IEEE-754</ins>](https://wikipedia.org/wiki/IEEE-754) standard.
+    - Be either <ins>one's complement or two's complement</ins>.
+    - Be either <ins>Big-Endian or Little-Endian</ins>.
 - <u>*for multithreading support*</u> | Compiler with **OpenMP 2.0 support** (OpenMP **3.0** is recommended).
 
 **Remark**: Some compilers, that support C++11 **partially** also can compile libquant.
