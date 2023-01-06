@@ -7,9 +7,11 @@
 #include "../samples.h"
 #include "../io/fheaders.h"
 
-/* Median filter effect.
-   It passes each sample, and replaces it with median of neighboring samples.
+/* Mean filter effect.
+
+   It passes each sample, and replaces it with mean of neighboring samples.
    Number of neighboring samples, whose median will be calculated called "window size"
-   Length is the number of samples in all channels.
-   Window size must be greater than 0 and less than number of samples in one channel. */
-CFUNCTION int effect_medianfilter(slevel_t* samples, size_t length, fheader* header, size_t windowsize);
+   
+   Last argument is the pointer to mean function.
+   You can use, for example, sltmedian as mean function. (see samples.h) */
+CFUNCTION int effect_meanfilter(slevel_t* samples, size_t length, fheader* header, size_t windowsize, mean_func_t meanfunction);

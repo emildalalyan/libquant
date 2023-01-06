@@ -22,7 +22,7 @@ CFUNCTION const program_ver libquant_getversion()
     const program_ver version = {
         .major = 1,
         .minor = 0,
-        .suffix = "alpha"
+        .label = "alpha"
     };
 
     return version;

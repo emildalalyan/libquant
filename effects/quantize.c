@@ -18,15 +18,14 @@ CFUNCTION int effect_quantize(slevel_t* samples, size_t length, size_t depth, bo
         return FUNC_INTERNAL_ERROR;
 
     slevel_t bitmask = ((combs-1) << (SLEVEL_BIT_DEPTH-depth));
-    // We use bit-masking to select only "depth" of bits.
+    // We use bit-masking to select only needed bits.
 
     slevel_t alignbit = ((slevel_t)1 << (SLEVEL_BIT_DEPTH-depth-1));
-    // It's alignment bit, it's necessary, because after applying bitmask
+    // This is the alignment bit, it's necessary, because after applying bitmask
     // both positive and negative numbers become less
     // (on one's complement and two's complement machines), so positive-half of wave
     // become less than negative one on half of quantization step.
-    // so we have to shift signal on half of quantization step,
-    // i.e set previous bit (before last changing bit) to 1.
+    // so we have to shift signal.
 
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i++)

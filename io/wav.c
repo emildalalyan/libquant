@@ -13,42 +13,34 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(channels < 1 || samplerate < 1 || depth < 1) return FUNC_INVALID_ARG;
 
     if(length % channels) return FUNC_INVALID_ARG;
-    // Length must be multiple of channels, because
-    // number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
 
     if(channels > UINT16_MAX || samplerate > UINT32_MAX) return FUNC_UNSUPPORTED;
-    // In WAV files number of channels is written as 16-bit unsigned integer,
-    // so maximum possible number of channels is 65535.
-    // And sample rate is written as 32-bit unsigned integer,
-    // so maximum possible sample rate is (2^32)-1 Hz
+    // In WAV files maximum possible number of channels is 65535,
+    // and maximum possible sample rate is (2^32)-1 Hz.
 
     rewind(file);
-    // It sets file position to 0th byte.
+    // Restoring position to 0th byte.
 
-    /* RIFF chunk ====== */
+    /* RIFF chunk ======================== */
 
-    if(fwrite(WAVE_SIGNRIFF, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
-    // It writes RIFF sign in beginning of file.
+    if(fwrite(WAVE_SIGNRIFF, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH)
         return FUNC_IO_ERROR;
 
     if(fseek(file, sizeof(uint32_t), SEEK_CUR))
     // We'll write file size after writing all data.
         return FUNC_IO_ERROR;
 
-    if(fwrite(WAVE_SIGNWAVFORMAT, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
-    // It writes WAV format sign.
+    if(fwrite(WAVE_SIGNWAVFORMAT, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH)
         return FUNC_IO_ERROR;
 
-    uint32_t riffchunksize = ftell(file);
-    // RIFF chunk size matches current file position, because
-    // this chunk are first in the file.
+    uint32_t riffchunkend = ftell(file);
 
-    /* ================= */
+    /* =================================== */
 
-    /* Format subchunk = */
+    /* Format subchunk =================== */
 
-    if(fwrite(WAVE_SIGNFMTCHUNK, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
-    // It writes format subchunk sign.
+    if(fwrite(WAVE_SIGNFMTCHUNK, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH)
         return FUNC_IO_ERROR;
 
     if(fseek(file, sizeof(uint32_t), SEEK_CUR))
@@ -66,12 +58,8 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
         case WAVE_FORMAT_PCM:
         case WAVE_FORMAT_IEEE_FLOAT:
         {
-            if(depth < 8u) return FUNC_INVALID_ARG;
-            // If sample depth would be less than 8, we'd divide
-            // data size by 0, so it would be incorrect.
-
             if(depth % 8u) return FUNC_INVALID_ARG;
-            // Depth must be multiple of 8.
+            // Each sample must occupy integer number of bytes.
             
             byterate_le = (channels*samplerate*(depth/8u));
             if(byterate_le < 1) return FUNC_INTERNAL_ERROR;
@@ -85,7 +73,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
 
     uint16_t sampleslength_le = byterate_le/samplerate;
 
-    #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+    #if ENDIANNESS == ORDER_BE
         format_le = swap_16b(format);
         depth_le = swap_16b(depth);
         channels_le = swap_64b(channels);
@@ -105,35 +93,30 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
         return FUNC_IO_ERROR;
 
     uint32_t fmtchunkend = ftell(file);
-    // Storages position of format chunk end.
+    // Position of the format subchunk end.
 
-    /* It sets format chunk size. */
     {
-        uint32_t fmtchunksize = (fmtchunkend-riffchunksize)-(WAVE_SIGNLENGTH+sizeof(uint32_t));
-        // Storages format chunk size (except of its signature and chunk size field)
+        uint32_t fmtchunksize = (fmtchunkend-riffchunkend)-(RIFF_SIGNLENGTH+sizeof(uint32_t));
 
-        if(fseek(file, riffchunksize+WAVE_SIGNLENGTH, SEEK_SET))
-            return FUNC_IO_ERROR;
-
-        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+        #if ENDIANNESS == ORDER_BE
             fmtchunksize = swap_32b(fmtchunksize);
         #endif
 
-        if(fwrite(&fmtchunksize, sizeof(uint32_t), 1, file) != 1)
+        if(fseek(file, riffchunkend+RIFF_SIGNLENGTH, SEEK_SET)
+        || fwrite(&fmtchunksize, sizeof(uint32_t), 1, file) != 1)
             return FUNC_IO_ERROR;
     }
-    // Brackets limit variables scope.
+    // Writing format subchunk size.
 
     if(fseek(file, fmtchunkend, SEEK_SET))
     // Returning back to end of format chunk.
         return FUNC_IO_ERROR;
 
-    /* ================= */
+    /* =================================== */
 
-    /* Data subchunk === */
+    /* Data subchunk ===================== */
 
-    if(fwrite(WAVE_SIGNDATACHUNK, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
-    // It writes data subchunk sign.
+    if(fwrite(WAVE_SIGNDATACHUNK, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH)
         return FUNC_IO_ERROR;
 
     if(fseek(file, sizeof(uint32_t), SEEK_CUR))
@@ -148,7 +131,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     {
         case WAVE_FORMAT_PCM:
         {
-            size_t maxlength = UINT32_MAX - (headerlength-(WAVE_SIGNLENGTH + sizeof(uint32_t)));
+            size_t maxlength = UINT32_MAX - (headerlength-(RIFF_SIGNLENGTH + sizeof(uint32_t)));
             // In RIFF, file size is storing as 32-bit number,
             // file size field defines size of entire file
             // EXCLUDING length of 'RIFF' signature and length of file size field,
@@ -169,15 +152,14 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     int16_t* output = (int16_t*)malloc(length * sizeof(int16_t));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(omp_iter_t i = 0; i < length; i++)
                     {
                         int16_t sample = slttoi16(samples[i]);
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = iswap_16b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_16b(&sample);
                         #endif
 
                         output[i] = sample;
@@ -200,7 +182,6 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                     // 24-bit integer type.
 
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(omp_iter_t i = 0; i < length; i++)
@@ -228,15 +209,14 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     int32_t* output = (int32_t*)malloc(length * sizeof(int32_t));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(omp_iter_t i = 0; i < length; i++)
                     {
                         int32_t sample = slttoi32(samples[i]);
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = iswap_32b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_32b(&sample);
                         #endif
 
                         output[i] = sample;
@@ -257,7 +237,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
         }
         case WAVE_FORMAT_IEEE_FLOAT:
         {
-            size_t maxlength = UINT32_MAX - (headerlength-(WAVE_SIGNLENGTH + sizeof(uint32_t)));
+            size_t maxlength = UINT32_MAX - (headerlength-(RIFF_SIGNLENGTH + sizeof(uint32_t)));
             // In RIFF, file size is storing as 32-bit number,
             // file size field defines size of entire file
             // EXCLUDING length of 'RIFF' signature and length of file size field,
@@ -278,15 +258,14 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     float* output = (float*)malloc(length * sizeof(float));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(omp_iter_t i = 0; i < length; i++)
                     {
                         float sample = slttof32(samples[i]);
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = fswap_32b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_32b(&sample);
                         #endif
 
                         output[i] = sample;
@@ -305,15 +284,14 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
                 {
                     double* output = (double*)malloc(length * sizeof(double));
                     if(output == NULL) return FUNC_MEMALLOC_FAILED;
-                    // If allocation was failed, malloc will return NULL pointer
 
                     #pragma omp parallel for schedule(static)
                     for(omp_iter_t i = 0; i < length; i++)
                     {
                         double sample = slttof64(samples[i]);
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = fswap_64b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_64b(&sample);
                         #endif
 
                         output[i] = sample;
@@ -335,7 +313,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
         default: return FUNC_UNSUPPORTED;
     }
 
-    /* ================= */
+    /* =================================== */
 
     /* Writing data size and file size === */
 
@@ -348,33 +326,31 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
         if(fseek(file, (headerlength - sizeof(uint32_t)), SEEK_SET))
             return FUNC_IO_ERROR;
 
-        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+        #if ENDIANNESS == ORDER_BE
             datasize = swap_32b(datasize);
         #endif
 
         if(fwrite(&datasize, sizeof(uint32_t), 1, file) != 1)
             return FUNC_IO_ERROR;
     }
-    // Brackets limit variables scope.
 
     {
-        uint32_t allchunkssize = filesize - (WAVE_SIGNLENGTH + sizeof(uint32_t));
-        // Storages size of entire file except of RIFF signature size and file size.
+        uint32_t riff_filesize = filesize - (RIFF_SIGNLENGTH + sizeof(uint32_t));
 
-        if(fseek(file, WAVE_SIGNLENGTH, SEEK_SET))
+        if(fseek(file, RIFF_SIGNLENGTH, SEEK_SET))
             return FUNC_IO_ERROR;
 
-        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-            allchunkssize = swap_32b(allchunkssize);
+        #if ENDIANNESS == ORDER_BE
+            riff_filesize = swap_32b(riff_filesize);
         #endif
 
-        if(fwrite(&allchunkssize, sizeof(uint32_t), 1, file) != 1)
+        if(fwrite(&riff_filesize, sizeof(uint32_t), 1, file) != 1)
             return FUNC_IO_ERROR;
     }
-    // Brackets limit variables scope.
+
+    // ^^^ Brackets limit variables scope. ^^^
     
     rewind(file);
-    // It sets file position back to 0th byte.
 
     /* =================================== */
 
@@ -399,17 +375,17 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
     memset(&tmpheader, 0, sizeof(wav_header));
 
     rewind(file);
-    if( fread(&tmpheader.riffsign, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH
+    if( fread(&tmpheader.riffsign, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH
     ||  fread(&tmpheader.filesize, sizeof(uint32_t), 1, file)           != 1
-    ||  fread(&tmpheader.filetype, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH )
+    ||  fread(&tmpheader.filetype, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH )
         return FUNC_IO_ERROR;
 
-    char currchunksign[WAVE_SIGNLENGTH+1];
+    char currchunksign[RIFF_SIGNLENGTH+1];
     memset(currchunksign, 0, sizeof(currchunksign));
 
     while(true)
     {
-        if(fread(currchunksign, sizeof(char), WAVE_SIGNLENGTH, file) != WAVE_SIGNLENGTH)
+        if(fread(currchunksign, sizeof(char), RIFF_SIGNLENGTH, file) != RIFF_SIGNLENGTH)
             return FUNC_IO_ERROR;
 
         if(!strcmp(currchunksign, WAVE_SIGNFMTCHUNK))
@@ -419,7 +395,7 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
             if(fread(&tmpheader.fmtchunksize, sizeof(uint32_t), 1, file) != 1)
                 return FUNC_IO_ERROR;
 
-            #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+            #if ENDIANNESS == ORDER_BE
                 tmpheader.fmtchunksize = swap_32b(tmpheader.fmtchunksize);
             #endif
 
@@ -461,7 +437,7 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
             // In RIFF containers, each chunk (after its signature)
             // contains its size (in bytes).
             
-            #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+            #if ENDIANNESS == ORDER_BE
                 size = swap_32b(size);
             #endif
 
@@ -482,7 +458,7 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
     if(wav_check_signatures(&tmpheader) == FUNC_SIGNATURE_FAILURE)
         return FUNC_SIGNATURE_FAILURE;
 
-    #if ENDIANNESS == __ORDER_BIG_ENDIAN__
+    #if ENDIANNESS == ORDER_BE
         tmpheader.audioformat = swap_16b(tmpheader.audioformat);
         tmpheader.channels = swap_64b(tmpheader.channels);
         tmpheader.samplesdepth = swap_16b(tmpheader.samplesdepth);
@@ -532,8 +508,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
 
             numsamples -= (numsamples % channels);
             // If number of samples is not multiple of channels, then
-            // length of each channel are different, but this cannot be in WAV.
-            // So we just subtracting remainder from numsamples for correct editing of signal.
+            // length of each channel are different, so we bypass it.
 
             break;
         }
@@ -544,7 +519,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
     
     slevel_t* samplesarr = (slevel_t*)malloc(numsamples * sizeof(slevel_t));
     if(samplesarr == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, malloc will return NULL pointer
 
     *samples = samplesarr;
 
@@ -558,7 +532,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                 {
                     int16_t* ogsamples = (int16_t*)malloc(numsamples * sizeof(int16_t));
                     if(ogsamples == NULL)
-                    // If allocation was failed, malloc will return NULL pointer
                     {
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
@@ -576,8 +549,8 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     {
                         int16_t sample = ogsamples[i];
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = iswap_16b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_16b(&sample);
                         #endif
                         
                         samplesarr[i] = i16toslt(sample);
@@ -598,7 +571,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, 3, numsamples, file) != numsamples)
                     {
@@ -629,7 +601,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, malloc will return NULL pointer
                     
                     if(fread(ogsamples, sizeof(int32_t), numsamples, file) != numsamples)
                     {
@@ -643,8 +614,8 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     {
                         int32_t sample = ogsamples[i];
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = iswap_32b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_32b(&sample);
                         #endif
 
                         samplesarr[i] = i32toslt(sample);
@@ -678,7 +649,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, sizeof(float), numsamples, file) != numsamples)
                     {
@@ -692,8 +662,8 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     {
                         float sample = ogsamples[i];
                         
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = fswap_32b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_32b(&sample);
                         #endif
 
                         samplesarr[i] = f32toslt(sample);
@@ -710,7 +680,6 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                         samples_free(samples);
                         return FUNC_MEMALLOC_FAILED;
                     }
-                    // If allocation was failed, malloc will return NULL pointer
 
                     if(fread(ogsamples, sizeof(double), numsamples, file) != numsamples)
                     {
@@ -724,8 +693,8 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
                     {
                         double sample = ogsamples[i];
 
-                        #if ENDIANNESS == __ORDER_BIG_ENDIAN__
-                            sample = fswap_64b(sample);
+                        #if ENDIANNESS == ORDER_BE
+                            pswap_64b(&sample);
                         #endif
 
                         samplesarr[i] = f64toslt(sample);

@@ -5,7 +5,7 @@
 // : Nyquist frequency equals one half of sample rate.                                :
 // : If frequency would be greater than Nyquist frequency, then sample rate           :
 // : would be insufficient for it, aliasing effect would appear, because for correct  :
-// : representation of signal, you need at least two samples for each oscillation.    :
+// : representation of signal, you need more than two samples for each oscillation.   :
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header, double freq)
@@ -17,20 +17,16 @@ CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header,
     uint64_t samplerate = header->samplerate;
 
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
-
     if(length % channels) return FUNC_INVALID_ARG;
-    // Length must be multiple of channels, because
-    // number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
 
     if(freq <= 0 || freq > (samplerate/2.0)) return FUNC_INVALID_ARG;
     // For explanation, see line 3.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, malloc will return NULL pointer
 
     double step = ((2*MATH_PI)*freq)/(samplerate*channels);
-    // Period of sin(x) function is 2*pi
 
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i += channels)
@@ -57,17 +53,14 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     uint64_t samplerate = header->samplerate;
 
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
-
     if(length % channels) return FUNC_INVALID_ARG;
-    // Length must be multiple of channels, because
-    // number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
 
     if(freq <= 0 || freq > (samplerate/2.0)) return FUNC_INVALID_ARG;
     // For explanation, see line 3.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, malloc will return NULL pointer
 
     double period = ((double)(samplerate)/freq);
 
@@ -78,9 +71,7 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
-            if(sample > SLEVEL_MAX) result[i+ci] = SLEVEL_MAX;
-            else if(sample < SLEVEL_MIN) result[i+ci] = SLEVEL_MIN;
-            else result[i+ci] = (slevel_t)sample;
+            SLEVEL_CLIPPING(sample, result[i+ci]);
             // Floating-point numbers are inaccurate so we have to
             // check whether it's out of slevel_t range or not.
         }
@@ -98,22 +89,19 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
 
     uint64_t channels = header->channels;
     uint64_t samplerate = header->samplerate;
-
+    
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
-
     if(length % channels) return FUNC_INVALID_ARG;
-    // Length must be multiple of channels, because
-    // number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
 
     if(freq <= 0 || freq > (samplerate/2.0)) return FUNC_INVALID_ARG;
     // For explanation, see line 3.
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, malloc will return NULL pointer
 
     double period = (samplerate/freq);
-    // Storages square wave signal period.
+    // Defines square wave signal period.
 
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i += channels)
@@ -150,7 +138,6 @@ CFUNCTION int synth_noise(slevel_t** samples, size_t length)
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
     
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
-    // If allocation was failed, malloc will return NULL pointer
 
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i++)
@@ -167,10 +154,8 @@ CFUNCTION int synth_noise(slevel_t** samples, size_t length)
         // We use (RAND_MAX/2.0), and not (RAND_MAX/2), for implicit
         // conversion to double-precision floating-point
         // number, because results can be fractional.
-
-        if(sample > SLEVEL_MAX) result[i] = SLEVEL_MAX;
-        else if(sample < SLEVEL_MIN) result[i] = SLEVEL_MIN;
-        else result[i] = sample;
+        
+        SLEVEL_CLIPPING(sample, result[i]);
         // Floating point numbers are inaccurate, so we
         // have to check whether it's out of slevel_t range or not.
     }

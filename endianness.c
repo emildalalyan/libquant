@@ -68,6 +68,7 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
                 "bswap %%edx" : "=a"(res_high), "=d"(res_low) : "a"(res_high), "d"(res_low));
 
         return (((uint64_t)res_low << 32) | (uint64_t)res_high);
+        // And then we swap them.
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
         uint32_t res_high = 0, res_low = 0;
 
@@ -86,6 +87,7 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
         }
 
         return (((uint64_t)res_low << 32) | (uint64_t)res_high);
+        // And then we swap them.
     #else
         return  ((num & 0xFF00000000000000)>>56) |
                 ((num & 0x00FF000000000000)>>40) |
@@ -98,72 +100,44 @@ CFUNCTION uint64_t swap_64b(uint64_t num)
     #endif
 }
 
-CFUNCTION int16_t iswap_16b(int16_t num)
+CFUNCTION void pswap_16b(void* num)
 {
     uint16_t unsint = 0;
-    memcpy(&unsint, &num, sizeof(uint16_t));
+    memcpy(&unsint, num, sizeof(unsint));
 
     unsint = swap_16b(unsint);
-    memcpy(&num, &unsint, sizeof(uint16_t));
-
-    return num;
+    memcpy(num, &unsint, sizeof(unsint));
 }
 
-CFUNCTION int32_t iswap_32b(int32_t num)
+CFUNCTION void pswap_32b(void* num)
 {
     uint32_t unsint = 0;
-    memcpy(&unsint, &num, sizeof(uint32_t));
+    memcpy(&unsint, num, sizeof(unsint));
 
     unsint = swap_32b(unsint);
-    memcpy(&num, &unsint, sizeof(uint32_t));
-
-    return num;
+    memcpy(num, &unsint, sizeof(unsint));
 }
 
-CFUNCTION int64_t iswap_64b(int64_t num)
+CFUNCTION void pswap_64b(void* num)
 {
     uint64_t unsint = 0;
-    memcpy(&unsint, &num, sizeof(uint64_t));
+    memcpy(&unsint, num, sizeof(unsint));
 
     unsint = swap_64b(unsint);
-    memcpy(&num, &unsint, sizeof(uint64_t));
-
-    return num;
-}
-
-CFUNCTION float fswap_32b(float num)
-{
-    uint32_t intnum = 0;
-    memcpy(&intnum, &num, sizeof(float));
-
-    intnum = swap_32b(intnum);
-    memcpy(&num, &intnum, sizeof(float));
-
-    return num;
-}
-
-CFUNCTION double fswap_64b(double num)
-{
-    uint64_t intnum = 0;
-    memcpy(&intnum, &num, sizeof(double));
-
-    intnum = swap_64b(intnum);
-    memcpy(&num, &intnum, sizeof(double));
-
-    return num;
+    memcpy(num, &unsint, sizeof(unsint));
 }
 
 CFUNCTION const char* endianness_getname()
 {
-    #if ENDIANNESS == __ORDER_LITTLE_ENDIAN__
-        const char* endiannessname = "little-endian";
-    #elif ENDIANNESS == __ORDER_BIG_ENDIAN__
-        const char* endiannessname = "big-endian";
-    #elif ENDIANNESS == __ORDER_PDP_ENDIAN__
-        const char* endiannessname = "pdp-endian";
+    #if ENDIANNESS == ORDER_LE
+        const char* ordername = "little-endian";
+    #elif ENDIANNESS == ORDER_BE
+        const char* ordername = "big-endian";
+    #elif ENDIANNESS == ORDER_PDP
+        const char* ordername = "pdp-endian";
     #else
-        const char* endiannessname = "unknown";
+        const char* ordername = "unknown";
     #endif
 
-    return endiannessname;
+    return ordername;
 }

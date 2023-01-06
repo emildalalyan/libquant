@@ -24,12 +24,17 @@
 
 /* Versioning ================== */
 
-/* This is the structure, that is using for transfering the program version. */
+/* This is the structure, that is using for definition of the program version. */
 typedef struct program_ver
 {
+    /* Major version of the program. */
     uint32_t major;
+
+    /* Minor version of the program. */
     uint32_t minor;
-    const char* suffix;
+
+    /* Label of the version. */
+    const char* label;
 } program_ver;
 
 /* ============================= */
@@ -153,10 +158,11 @@ typedef struct program_ver
     // If compiler is unknown, then we just
     // make this macro empty.
 #endif
+
 /* ============================= */
 
-
 /* Architecture detection ====== */
+
 #if defined(_M_IX86) || defined(__i386__)
     #define ARCH_X86 1
     // 32-bit x86-based CPU.
@@ -191,17 +197,16 @@ typedef struct program_ver
     #define ARCH_MIPS 1
     // 32/64-bit MIPS CPU.
 #endif
+
 /* ============================= */
 
 /* Assertions =========================== */
 
 #if defined(SUPPORTS_C11) || defined(SUPPORTS_CPP11)
-// C has static_assert beginning from C11. C++ also has this feature beginning from C++11.
-
+// Only C11/C++11 and higher have static_assert.
     static_assert(sizeof(float)  == sizeof(uint32_t), "Single-precision FP is not 32-bit long.");
     static_assert(sizeof(double) == sizeof(uint64_t), "Double-precision FP is not 64-bit long.");
-    // Checking, whether floating-point numbers types meet IEEE 754 standard or not.
-
+    // Checking floating-point types length.
 #endif
 
 /* ====================================== */

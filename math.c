@@ -5,8 +5,7 @@
 CFUNCTION double math_interpolate(interp_method method, double y0, double y1, double pos)
 {
     if(y0 == y1 || pos == 0) return y0;
-    // If difference between two values is 0, or position is 0,
-    // then any interpolation method will return y0.
+    // In this cases any interpolation method will return y0.
     
     switch(method)
     {
@@ -36,6 +35,8 @@ CFUNCTION double math_interpolate(interp_method method, double y0, double y1, do
 
 CFUNCTION double math_logbase(double num, double base)
 {
+    if(base == 1) return FUNC_INVALID_ARG;
+
     return (log2(num)/log2(base));
     // We use logarithm property: log_a(b) = log_c(b)/log_c(a).
 }

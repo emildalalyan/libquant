@@ -60,7 +60,7 @@ CFUNCTION slevel_t f32toslt(float sample)
 CFUNCTION slevel_t f64toslt(double sample)
 {
     if(sample == 0.0F) return (slevel_t)0;
-    
+
     double result = sample * SLEVEL_MAX;
 
     if(result > SLEVEL_MAX) return SLEVEL_MAX;
@@ -130,14 +130,10 @@ CFUNCTION double slttof64(slevel_t sample)
     // so after dividing, it can be out of range.
 }
 
-CFUNCTION void samples_free(slevel_t** samples)
+CFUNCTION int samples_free(slevel_t** samples)
 {
     if(samples == NULL || (*samples) == NULL)
-    {
-        errno = EINVAL;
-        return;
-    }
-    else errno = 0;
+        return FUNC_INVALID_ARG;
 
     free((*samples));
     (*samples) = NULL;
@@ -145,12 +141,7 @@ CFUNCTION void samples_free(slevel_t** samples)
 
 CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
 {
-    if(samples == NULL || length < 1)
-    {
-        errno = EINVAL;
-        return 0;
-    }
-    else errno = 0;
+    if(samples == NULL || length < 1) return 0;
 
     slevel_t maxabs = 0;
 
@@ -199,4 +190,29 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
     // By definition, modulus of the number N
     // is the -N, if N is negative
     // and just N, if N is positive or 0
+}
+
+CFUNCTION slevel_t sltmedian(slevel_t* samples, size_t length)
+{
+    qsort(samples, length, sizeof(slevel_t), (int(*)(const void*, const void*))samples_compare);
+    return samples[length/2];
+}
+
+CFUNCTION slevel_t sltarithmeticmean(slevel_t* samples, size_t length)
+{
+    double amean = 0;
+    for(size_t i = 0; i < length; i++)
+    {
+        amean += (double)samples[i]/(double)length;
+    }
+
+    slevel_t output;
+    SLEVEL_CLIPPING(amean, output);
+
+    return output;
+}
+
+CFUNCTION slevel_t sltrandom(slevel_t* samples, size_t length)
+{
+    return samples[(size_t)(((double)rand()/RAND_MAX)*(length-1))];
 }

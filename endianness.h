@@ -14,20 +14,14 @@ CFUNCTION uint32_t swap_32b(uint32_t num);
 /* Swap 8 bytes in specified number */
 CFUNCTION uint64_t swap_64b(uint64_t num);
 
-/* Swap 4 bytes in floating-point number. */
-CFUNCTION float fswap_32b(float num);
+/* Swap 2 bytes by specified address. */
+CFUNCTION void pswap_16b(void* num);
 
-/* Swap 8 bytes in floating-point number. */
-CFUNCTION double fswap_64b(double num);
+/* Swap 4 bytes by specified address. */
+CFUNCTION void pswap_32b(void* num);
 
-/* Swap 2 bytes in specified signed number. */
-CFUNCTION int16_t iswap_16b(int16_t num);
-
-/* Swap 4 bytes in specified signed number */
-CFUNCTION int32_t iswap_32b(int32_t num);
-
-/* Swap 8 bytes in specified signed number */
-CFUNCTION int64_t iswap_64b(int64_t num);
+/* Swap 8 bytes by specified address. */
+CFUNCTION void pswap_64b(void* num);
 
 #if defined(CHAR_BIT) && CHAR_BIT != 8
     #error This machine has non-8-bit byte, so this machine is not supported.
@@ -35,30 +29,22 @@ CFUNCTION int64_t iswap_64b(int64_t num);
 
 /* Endianness detection macros ======= */
 
+#define ORDER_LE 1234
+#define ORDER_BE 4321
+#define ORDER_PDP 3412
+// Definition of byte order macros.
+
 /* Use this to change default endianness,
    in the case, when endianness cannot be determined. */
-#define DEFAULT_ENDIANNESS __ORDER_LITTLE_ENDIAN__
-
-#if !defined(__ORDER_LITTLE_ENDIAN__)
-    #define __ORDER_LITTLE_ENDIAN__ 1234
-#endif
-
-#if !defined(__ORDER_BIG_ENDIAN__)
-    #define __ORDER_BIG_ENDIAN__ 4321
-#endif
-
-#if !defined(__ORDER_PDP_ENDIAN__)
-    #define __ORDER_PDP_ENDIAN__ 3412
-#endif
-// These macros are not defined in MSVC.
+#define DEFAULT_ENDIANNESS ORDER_LE
 
 #if defined(__BYTE_ORDER__)
     #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-        #define ENDIANNESS __ORDER_LITTLE_ENDIAN__
+        #define ENDIANNESS ORDER_LE
     #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-        #define ENDIANNESS __ORDER_BIG_ENDIAN__
+        #define ENDIANNESS ORDER_BE
     #elif __BYTE_ORDER__ == __ORDER_PDP_ENDIAN__
-        #define ENDIANNESS __ORDER_PDP_ENDIAN__
+        #define ENDIANNESS ORDER_PDP
         #error PDP-endian machines are not supported by this release.
     #else
         #error Machine endianness is unsupported.
@@ -71,5 +57,5 @@ CFUNCTION int64_t iswap_64b(int64_t num);
 
 /* =================================== */
 
-/* Get string name of used byte-order (endianness). */
+/* Get string name of used byte-order. */
 CFUNCTION const char* endianness_getname();

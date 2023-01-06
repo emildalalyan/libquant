@@ -63,7 +63,7 @@ enum wav_formats
 /* ====================================== */
 
 /* Length (in bytes) of each sign. Length of all RIFF signs is the same. */
-#define WAVE_SIGNLENGTH 4
+#define RIFF_SIGNLENGTH 4
 
 /* =================== */
 
@@ -81,16 +81,16 @@ typedef struct wav_header
    /* ========================= */
 
    /* Signature of the RIFF chunk in a file (5th character is null-terminator). */
-   char riffsign[WAVE_SIGNLENGTH+1];
+   char riffsign[RIFF_SIGNLENGTH+1];
 
    /* File size without RIFF chunk length. */
    uint32_t filesize;
 
    /* File type signature. For WAV file it's "WAVE" (5th character is null-terminator). */
-   char filetype[WAVE_SIGNLENGTH+1];
+   char filetype[RIFF_SIGNLENGTH+1];
 
    /* Signature of Subchunk1 (format chunk). 5th character is null-terminator. */
-   char fmtchunksign[WAVE_SIGNLENGTH+1];
+   char fmtchunksign[RIFF_SIGNLENGTH+1];
 
    /* Size of the Subchunk1 (format chunk) */
    uint32_t fmtchunksize;
@@ -108,7 +108,7 @@ typedef struct wav_header
    uint16_t samplesdepth;
     
    /* Subchunk2 signature (data chunk). 5th character is null-terminator.*/
-   char datasign[WAVE_SIGNLENGTH+1];
+   char datasign[RIFF_SIGNLENGTH+1];
 
    /* Size of the audio data (measured in bytes).
       It equals (NumSamples * NumChannels * (BitsPerSample/8)) */
@@ -120,27 +120,33 @@ typedef struct wav_header
 } wav_header;
 
 /* Read WAV header from specified file.
+
    Function will read header from specified header and
-   it will write information into header, by provided pointer. */
+   it will write information into structure by provided pointer. */
 CFUNCTION int wav_read_header(wav_header* header, FILE* file);
 
 /* Check signatures of WAV file header.
+
    Function will check following signatures: "RIFF", "WAVE", "fmt ", "data".
+
    Function will return FUNC_SIGNATURE_FAILURE if signatures are incorrect,
    otherwise it'll return FUNC_OK. (see "enum func_status") */
 CFUNCTION int wav_check_signatures(wav_header* header);
 
 /* Read samples from WAV file.
+
    It reads samples in format, specified in header.
-   Samples will be read using provided pointer to FILE.
-   Function will allocate memory for samples array, and it will set address of pointer.
-   Function also will set the length of samples array. */
+
+   Function will do following things:
+   - allocate memory for samples array and set address of specified pointer for it.
+   - set the length of samples array. */
 CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** samples, size_t* length);
 
 /* Write WAV header and samples into specified file.
+
    Function will write samples in format, specified in header.
-   It will be using ONLY following fields in header:
+   It will use ONLY following fields in header:
    "channels", "samplerate", "audioformat", "samplesdepth".
-   If size of all samples exceed 4GB, samples array will be truncated, because
-   in RIFF format, size is storing as 32-bit integer, i.e maximum size is (2^32) bytes. */
+
+   If size of all samples exceed 4GB, samples array will be truncated. */
 CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, size_t length);

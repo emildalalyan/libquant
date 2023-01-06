@@ -8,10 +8,6 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length)
     slevel_t maxabs = samples_findmaxabs(samples, length);
     // Finding maximum absolute value from array of samples.
 
-    if(errno != 0) return FUNC_INTERNAL_ERROR;
-    // samples_findmaxabs() sets errno to EINVAL if invalid
-    // arguments were passed, and to 0, if arguments were right.
-
     if(maxabs == SLEVEL_MAX) return FUNC_OK;
     // If maximum sample level is SLEVEL_MAX, we don't need to
     // amplify the signal (multiply samples).
@@ -24,29 +20,23 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length)
     return effect_amplify(samples, length, amp_ratio);
 }
 
-CFUNCTION int effect_amplify(slevel_t* samples, size_t length, double ratio)
+CFUNCTION int effect_amplify(slevel_t* samples, size_t length, double multiplier)
 {
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
     
-    if(ratio == 1) return FUNC_OK;
+    if(multiplier == 1) return FUNC_OK;
 
     #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i++)
     {
         if(samples[i] == 0) continue;
 
-        double sample = samples[i] * ratio;
+        double sample = samples[i] * multiplier;
 
-        if(sample < SLEVEL_MIN) samples[i] = SLEVEL_MIN;
-        else if(sample > SLEVEL_MAX) samples[i] = SLEVEL_MAX;
-        else samples[i] = (slevel_t)sample;
+        SLEVEL_CLIPPING(sample, samples[i]);
         // Samples after amplifying can be out of slevel_t range.
-        // And second reason is floating-point numbers. They are inaccurate,
-        // so we have to check whether it's out of slevel_t range or not.
-        // If sample is out of slevel_t range, it will be clipped,
-        // i.e it will set to SLEVEL_MAX or SLEVEL_MIN for positive and negative
-        // sample level respectively.
+        // If sample is out of slevel_t range, it will be clipped.
     }
 
     return FUNC_OK;
@@ -62,8 +52,7 @@ CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, dou
     uint64_t channels = header->channels;
 
     if(channels < 1 || length % channels)
-    // Length must be multiple of channels, because
-    // number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
         return FUNC_INVALID_ARG;
 
     size_t loopend = duration*channels;
@@ -84,7 +73,7 @@ CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, dou
         {
             if(reverse)
             // Condition inside the loop is slower than outside the loop,
-            // BUT condition, that placed inside the loop, provides more code readability.
+            // BUT it provides more code readability.
             {
                 samples[(lastsample-i)-(lastchannel-ci)] *= volume;
                 // We just reverse fade-in algorithm, beginning from last samples.
@@ -96,7 +85,7 @@ CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, dou
     return FUNC_OK;
 }
 
-CFUNCTION int effect_distort(slevel_t* samples, size_t length, slevel_t max, slevel_t min)
+CFUNCTION int effect_clipping(slevel_t* samples, size_t length, slevel_t max, slevel_t min)
 {
     if(samples == NULL) return FUNC_INVALID_ARG;
     if(max < 0 || min > 0) return FUNC_INVALID_ARG;
