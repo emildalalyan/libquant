@@ -48,28 +48,8 @@ Current library development period is **Alpha**.
 - <u>*for multithreading support*</u> | Compiler with **OpenMP 2.0 support** (OpenMP **3.0** is recommended).
 
 **Remark**: Some compilers, that support C++11 **partially** also can compile libquant.
-
-### Build guide
-#### Microsoft Windows
-- **Step 1**: Download and install **make**
-    - Command for [Chocolatey](https://chocolatey.org): <code>choco install make</code>
-- **Step 2**: Download and install **compiler** (e.g. MinGW-w64 GCC)
-- **Step 3**: Download and **extract source code** in some directory.
-- **Step 4**: Open **Command Prompt**, and go to directory from **Step 3**
-- **Step 5**: Do <code>make</code> and wait for compilation.
-    - If you use compiler which executable is not called <code>gcc</code>, then enter <code>make COMPILER=(compiler executable name)</code> instead of just <code>make</code>.
-- **Step 6**: All done! Library will be in "*build*" directory
-
-#### *nix systems (e.g. GNU/Linux)
-- **Step 1**: Download and install **make**
-    - Command for **apt**: <code>apt install make</code>
-- **Step 2**: Download and install **compiler** (e.g. GCC)
-    - Command for **apt**: <code>apt install gcc</code>
-- **Step 3**: Download and **extract source code** in some directory.
-- **Step 4**: Go to directory from **Step 3**
-- **Step 5**: Do <code>make</code> and wait for compilation.
-    - If you use compiler which executable is not called <code>gcc</code>, then enter <code>make COMPILER=(compiler executable name)</code> instead of just <code>make</code>.
-- **Step 6**: All done! Library will be in <u>build</u> directory
+### Documentation
+See [main page of the documentation](docs/Main.md)
 
 ### Donate
 :credit_card: If someone wants to **support** me or my project, then the link to **DonationAlerts** is [**here**](https://donationalerts.com/r/emildalalyan)
