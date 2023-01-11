@@ -2,8 +2,6 @@
 
 CFUNCTION slevel_t i16toslt(int16_t sample)
 {
-    if(sample == 0) return (slevel_t)0;
-
     #if SLEVEL_BIT_DEPTH >= 16
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-16));
     #else
@@ -15,9 +13,7 @@ CFUNCTION slevel_t i16toslt(int16_t sample)
 
 CFUNCTION slevel_t i24toslt(int32_t sample)
 {
-    if(sample == 0) return (slevel_t)0;
-
-    if(sample & UINT8_MAX) sample &= ~UINT8_MAX;
+    sample &= ~UINT8_MAX;
     // If value of the first byte is not 0, then
     // we just fill it with zeros.
     
@@ -32,8 +28,6 @@ CFUNCTION slevel_t i24toslt(int32_t sample)
 
 CFUNCTION slevel_t i32toslt(int32_t sample)
 {
-    if(sample == 0) return (slevel_t)0;
-
     #if SLEVEL_BIT_DEPTH >= 32
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-32));
     #else
@@ -45,8 +39,6 @@ CFUNCTION slevel_t i32toslt(int32_t sample)
 
 CFUNCTION slevel_t f32toslt(float sample)
 {
-    if(sample == 0.0F) return (slevel_t)0;
-    
     float result = sample * SLEVEL_MAX;
 
     if(result > SLEVEL_MAX) return SLEVEL_MAX;
@@ -59,8 +51,6 @@ CFUNCTION slevel_t f32toslt(float sample)
 
 CFUNCTION slevel_t f64toslt(double sample)
 {
-    if(sample == 0.0F) return (slevel_t)0;
-
     double result = sample * SLEVEL_MAX;
 
     if(result > SLEVEL_MAX) return SLEVEL_MAX;
@@ -73,8 +63,6 @@ CFUNCTION slevel_t f64toslt(double sample)
 
 CFUNCTION int16_t slttoi16(slevel_t sample)
 {
-    if(sample == 0) return (int16_t)0;
-
     #if SLEVEL_BIT_DEPTH >= 16
         return (int16_t)((sample >> (SLEVEL_BIT_DEPTH-16)) & UINT16_MAX);
     #else
@@ -84,8 +72,6 @@ CFUNCTION int16_t slttoi16(slevel_t sample)
 
 CFUNCTION int32_t slttoi24(slevel_t sample)
 {
-    if(sample == 0) return (int32_t)0;
-
     #if SLEVEL_BIT_DEPTH >= 32
         return (int32_t)((sample >> (SLEVEL_BIT_DEPTH-32)) & (~((int32_t)UINT8_MAX)));
     #else
@@ -95,8 +81,6 @@ CFUNCTION int32_t slttoi24(slevel_t sample)
 
 CFUNCTION int32_t slttoi32(slevel_t sample)
 {
-    if(sample == 0) return (int32_t)0;
-
     #if SLEVEL_BIT_DEPTH >= 32
         return (int32_t)((sample >> (SLEVEL_BIT_DEPTH-32)) & UINT32_MAX);
     #else
@@ -106,8 +90,6 @@ CFUNCTION int32_t slttoi32(slevel_t sample)
 
 CFUNCTION float slttof32(slevel_t sample)
 {
-    if(sample == 0) return 0.0f;
-
     float result = ((float)sample/SLEVEL_MAX);
 
     if(result > 1) return 1;
@@ -119,8 +101,6 @@ CFUNCTION float slttof32(slevel_t sample)
 
 CFUNCTION double slttof64(slevel_t sample)
 {
-    if(sample == 0) return 0.0;
-
     double result = ((double)sample/SLEVEL_MAX);
 
     if(result > 1) return 1;
@@ -137,6 +117,8 @@ CFUNCTION int samples_free(slevel_t** samples)
 
     free((*samples));
     (*samples) = NULL;
+
+    return FUNC_OK;
 }
 
 CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
@@ -184,12 +166,15 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
     if(sample == SLEVEL_MIN) return SLEVEL_MAX;
     // On two's complement machines, -SLEVEL_MIN causes
     // integer overflow, so we have to bypass this.
-
+    
     if(sample < 0) return -sample;
     else return sample;
-    // By definition, modulus of the number N
-    // is the -N, if N is negative
-    // and just N, if N is positive or 0
+
+    // ^^ This is the portable way to do abs. ^^
+    // It works on any machine with any negative
+    // number representation.
+    // Some compilers can optimize it, using some
+    // two's complement hacks.
 }
 
 CFUNCTION slevel_t sltmedian(slevel_t* samples, size_t length)
