@@ -6,8 +6,6 @@ CFUNCTION slevel_t i16toslt(int16_t sample)
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-16));
     #else
         return (slevel_t)((sample >> (16-SLEVEL_BIT_DEPTH)) & ~((slevel_t)0));
-        // ~((slevel_t)0) is number where all bits are set to 1
-        // even on ones' complement machines.
     #endif
 }
 
@@ -21,8 +19,6 @@ CFUNCTION slevel_t i24toslt(int32_t sample)
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-32));
     #else
         return (slevel_t)((sample >> (32-SLEVEL_BIT_DEPTH)) & ~((slevel_t)0));
-        // (SLEVEL_MIN | SLEVEL_MAX) is number where all bits are set to 1
-        // even on ones' complement machines.
     #endif
 }
 
@@ -32,8 +28,6 @@ CFUNCTION slevel_t i32toslt(int32_t sample)
         return ((slevel_t)sample << (SLEVEL_BIT_DEPTH-32));
     #else
         return (slevel_t)((sample >> (32-SLEVEL_BIT_DEPTH)) & ~((slevel_t)0));
-        // (SLEVEL_MIN | SLEVEL_MAX) is number where all bits are set to 1
-        // even on ones' complement machines.
     #endif
 }
 
