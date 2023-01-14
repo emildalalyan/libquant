@@ -121,7 +121,7 @@ CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
 
     slevel_t maxabs = 0;
 
-    for(omp_iter_t i = 0; i < length; i++)
+    for(size_t i = 0; i < length; i++)
     {
         if(samples[i] == SLEVEL_MIN || samples[i] == SLEVEL_MAX)
         // If sample equals SLEVEL_MAX or SLEVEL_MIN, then we don't need
