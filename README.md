@@ -36,7 +36,7 @@ Current library development period is **Alpha**.
 - Number of samples is storing as *size_t*, its width **depends on platform.**
 - Each channel must have the same number of samples.
 
-**Remark**: When you use OpenMP 2.0 (or older version), then samples iterator will be **long long**.
+**Remark**: If you use OpenMP 2.0 (or older version), then samples iterator will be **long long**.
 
 ### Requirements
 - **C99** (**C17** is recommended) or **C++11** compliant compiler.
