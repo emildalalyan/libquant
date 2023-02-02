@@ -13,15 +13,15 @@
     static int omp_get_thread_num(void)
     {
         return 0;
-        // If OpenMP support is disabled, then we're
-        // working only in one thread (0th thread).
+        // If OpenMP support was disabled, then we'll
+        // work only in one thread (0th thread).
     }
 
     static int omp_get_max_threads(void)
     {
         return 1;
-        // If OpenMP support is disabled, then we're
-        // working in one thread.
+        // If OpenMP support was disabled,
+        // then we'll work in one thread.
     }
 
     /* Iterator type for loops, that use OpenMP for parallelizing */

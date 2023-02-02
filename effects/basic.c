@@ -5,11 +5,11 @@ CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
     /* Arguments processing ============= */
 
     if(samples == NULL || header == NULL) return FUNC_INVALID_ARG;
-    
+
     uint64_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
-    
+
     /* ================================== */
 
     /* Reversing the sound ============== */

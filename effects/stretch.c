@@ -26,7 +26,7 @@ CFUNCTION int effect_speedup(slevel_t** samples, size_t* length, fheader* header
     size_t chachunksize = chunksize*channels;
     // To produce effect for multiple channels, we have to
     // multiply these variables by number of channels.
-    
+
     oglength -= oglength % chachunksize;
     // We subtract part of samples that less
     // than one chunk in all channels, to avoid

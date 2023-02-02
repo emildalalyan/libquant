@@ -7,7 +7,7 @@
 #include "../samples.h"
 #include "../io/fheaders.h"
 
-/* Auto-amplify effect.
+/* Auto-amplify effect, or normalization effect.
 
    Amplifies signal to maximum amplitude, without clipping and overflows. */
 CFUNCTION int effect_ampmax(slevel_t* samples, size_t length);
@@ -19,8 +19,9 @@ CFUNCTION int effect_ampmax(slevel_t* samples, size_t length);
 CFUNCTION int effect_amplify(slevel_t* samples, size_t length, double multiplier);
 
 /* Fade in/out effect.
+
    "initvolume" is the initial volume coefficient of the signal.
-   Initial volume coefficient cannot be less than 0, and greater than 1.
+   Initial volume coefficient is in range [0, 1].
    If reverse is true, then effect become fade out.
    Last arguments is the interpolation method, i.e, in this case, intermediate volume finding method. */
 CFUNCTION int effect_fade(slevel_t* samples, size_t length, fheader* header, double initvolume, size_t duration, bool reverse, interp_method method);

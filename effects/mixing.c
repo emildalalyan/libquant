@@ -77,8 +77,7 @@ CFUNCTION int effect_extractchadiff(slevel_t* samples, size_t length, fheader* h
 
     uint64_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
-    // oglength MUST BE multiple of ogchannels,
-    // because number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
     
     /* ================================== */
 
@@ -123,8 +122,7 @@ CFUNCTION int effect_amplifychadiff(slevel_t* samples, size_t length, fheader* h
 
     uint64_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
-    // oglength MUST BE multiple of ogchannels,
-    // because number of samples in each channel must be the same.
+    // Number of samples in each channel must be the same.
     
     /* ================================== */
 

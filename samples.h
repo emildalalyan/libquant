@@ -47,12 +47,12 @@ typedef int32_t slevel_t;
 
 /* ============================ */
 
+/* Length of slevel_t integer (in bits). */
 #define SLEVEL_BIT_DEPTH 32
-// Length of slevel_t integer (in bits).
 
+/* Format, that may be used in following
+   functions: printf for displaying slevel_t value. */
 #define SLEVEL_FORMAT PRIi32
-// Format, that may be used in following
-// functions: printf, sscanf, etc.
 
 #define INT24_MAX 8388607
 #define INT24_MIN -8388608
@@ -123,7 +123,7 @@ CFUNCTION int samples_compare(const slevel_t* first, const slevel_t* second);
    You can read about it there: https://en.wikipedia.org/wiki/Absolute_Value */
 CFUNCTION slevel_t sltabs(slevel_t sample);
 
-/* Statistics ================= */
+/* Mean functions ============= */
 
 /* Definition of the mean functions type.
 
@@ -133,14 +133,16 @@ CFUNCTION slevel_t sltabs(slevel_t sample);
 typedef slevel_t(*mean_func_t)(slevel_t*, size_t);
 
 /* Calculate median of the provided samples. */
-CFUNCTION slevel_t sltmedian(slevel_t* samples, size_t length);
+CFUNCTION slevel_t samples_median(slevel_t* samples, size_t length);
 
 /* Calculate arithmetic mean of the provided samples.
 
    If arithmetic mean will be out of slevel_t range, then it will be clipped. */
-CFUNCTION slevel_t sltarithmeticmean(slevel_t* samples, size_t length);
+CFUNCTION slevel_t samples_armean(slevel_t* samples, size_t length);
 
-/* Return random sample from provided array. */
-CFUNCTION slevel_t sltrandom(slevel_t* samples, size_t length);
+/* Return random sample from provided array.
+
+   This function uses rand() as random number generator. */
+CFUNCTION slevel_t samples_random(slevel_t* samples, size_t length);
 
 /* ============================ */

@@ -171,27 +171,27 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
     // two's complement hacks.
 }
 
-CFUNCTION slevel_t sltmedian(slevel_t* samples, size_t length)
+CFUNCTION slevel_t samples_median(slevel_t* samples, size_t length)
 {
     qsort(samples, length, sizeof(slevel_t), (int(*)(const void*, const void*))samples_compare);
     return samples[length/2];
 }
 
-CFUNCTION slevel_t sltarithmeticmean(slevel_t* samples, size_t length)
+CFUNCTION slevel_t samples_armean(slevel_t* samples, size_t length)
 {
-    double amean = 0;
+    double armean = 0;
     for(size_t i = 0; i < length; i++)
     {
-        amean += (double)samples[i]/(double)length;
+        armean += (double)samples[i]/(double)length;
     }
 
     slevel_t output;
-    SLEVEL_CLIPPING(amean, output);
+    SLEVEL_CLIPPING(armean, output);
 
     return output;
 }
 
-CFUNCTION slevel_t sltrandom(slevel_t* samples, size_t length)
+CFUNCTION slevel_t samples_random(slevel_t* samples, size_t length)
 {
     return samples[(size_t)(((double)rand()/RAND_MAX)*(length-1))];
 }

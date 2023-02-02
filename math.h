@@ -53,7 +53,7 @@ typedef enum interp_method
    INTERPOLATION_SINE = 2
 } interp_method;
 
-/* Find intermediate value of function with interpolation.
+/* Find intermediate value of the function with interpolation.
 
    First argument is the interpolation method (see enum interp_method).
    

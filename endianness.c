@@ -6,20 +6,17 @@
 CFUNCTION uint16_t swap_16b(uint16_t num)
 {
     #if (defined(ARCH_X86) || defined(ARCH_X86_64)) && defined(SUPPORTS_GCC)
-        uint16_t result = 0;
-        __asm__("xchg %%al, %%ah" : "=a"(result) : "a"(num));
+        uint32_t result = 0;
+        __asm__("rol $8, %%ax" : "=a"(result) : "a"(num));
 
         return result;
     #elif defined(ARCH_X86) && defined(SUPPORTS_MSVC)
-        uint16_t result = 0;
         __asm
         {
-            mov ax, num
-            xchg al, ah
-            mov result, ax
+            rol num, 8
         }
 
-        return result;
+        return num;
     #else
         return  ((num & 0x00FF)<<8) |
                 ((num & 0xFF00)>>8) ;

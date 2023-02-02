@@ -23,6 +23,7 @@
         expression; \
         counted = ((double)clock()-start)/CLOCKS_PER_SEC; \
     }
+    // In Windows, clock() returns process life time.
 #else
     #define COUNTTIME(expression, counted) \
     { \
@@ -30,10 +31,9 @@
         expression; \
         counted = difftime(time(NULL), start); \
     }
-    // In Windows, clock() returns process life time.
-    // In *nix systems, clock() returns CPU time (of all threads),
+    // In other systems, clock() returns CPU time (of all threads),
     // that has been spent on process execution,
-    // so we have to use time() in *nix systems to calculate
+    // so we have to use time() to calculate
     // time spent on function execution.
 #endif
 

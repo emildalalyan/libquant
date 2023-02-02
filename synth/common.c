@@ -136,7 +136,6 @@ CFUNCTION int synth_noise(slevel_t** samples, size_t length)
     if(length < 1) return FUNC_INVALID_ARG;
 
     slevel_t* result = (slevel_t*)malloc(length * sizeof(slevel_t));
-    
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
 
     #pragma omp parallel for schedule(static)

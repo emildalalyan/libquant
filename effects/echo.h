@@ -19,6 +19,6 @@ CFUNCTION int effect_echo(slevel_t* samples, size_t length, fheader* header, siz
    Delay is measured in samples.
    Volume of the delay is the multiplier of original samples.
    
-   Use it, where you need single echo effect, instead of effect_echo with 1 bounce,
-   because in this case, this function is faster than effect_echo. */
+   Use it, where you need single echo effect, instead of effect_echo() with 1 bounce,
+   because in this case, this function will be faster. */
 CFUNCTION int effect_delay(slevel_t* samples, size_t length, fheader* header, size_t delay, double volume);

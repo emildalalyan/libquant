@@ -1,8 +1,8 @@
 #pragma once
 
 // |= Macros usage warning ================================================|
-// | This file contains macros, that can help you to                       |
-// | determine language version, used compiler, and machine architecture.  |
+// | This file contains macros, that can help you determine language       |
+// | version, used compiler, and machine architecture.                     |
 // | But IT IS COMPILE-TIME MACROS, so it determines above things          |
 // | when translation unit, where "build.h" was included to, is compiling. |
 // |=======================================================================|
@@ -135,7 +135,7 @@ typedef struct program_ver
     // then it supports MSVC stuff (like inline assembler).
 
     #if !defined(_CRT_SECURE_NO_WARNINGS)
-        #define _CRT_SECURE_NO_WARNINGS 1
+        #error Please, open preprocessor definitions and add _CRT_SECURE_NO_WARNINGS
         // We should suppress errors about non-secure functions.
         // "*_s" functions are Microsoft-specific, so we can't use it.
     #endif
@@ -217,13 +217,15 @@ CFUNCTION const char* libquant_getcompilername();
 /* Get library version structure (see "struct program_ver"). */
 CFUNCTION const program_ver libquant_getversion();
 
-/* Get library author(s) string. If library has multiple
-   authors, their names will be comma-separated. */
+/* Get library author(s) string.
+   
+   If library has multiple authors, their names will be comma-separated. */
 CFUNCTION const char* libquant_getauthors();
 
 /* Get name of the architecture that library was compiled for. */
 CFUNCTION const char* libquant_getarchname();
 
 /* Get date/time of compilation.
+
    Date and time will be separated by space. */
 CFUNCTION const char* libquant_getdatetime();

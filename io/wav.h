@@ -138,7 +138,7 @@ CFUNCTION int wav_check_signatures(wav_header* header);
    It reads samples in format, specified in header.
 
    Function will do following things:
-   - allocate memory for samples array and set address of specified pointer for it.
+   - allocate memory for samples array and set address of specified pointer.
    - set the length of samples array. */
 CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** samples, size_t* length);
 

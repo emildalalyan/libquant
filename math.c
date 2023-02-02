@@ -35,8 +35,6 @@ CFUNCTION double math_interpolate(interp_method method, double y0, double y1, do
 
 CFUNCTION double math_logbase(double num, double base)
 {
-    if(base == 1) return FUNC_INVALID_ARG;
-
     return (log2(num)/log2(base));
     // We use logarithm property: log_a(b) = log_c(b)/log_c(a).
 }
