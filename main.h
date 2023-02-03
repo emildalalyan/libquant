@@ -68,7 +68,6 @@
 #include "effects/compressor.h"
 #include "effects/filters.h"
 #include "effects/stretch.h"
-#include "effects/resampling.h"
 
 /* ====================================== */
 
