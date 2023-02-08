@@ -21,4 +21,4 @@
 
 8.  Some abbreviation are allowed. If you using it, then you have to specify it here.
     Abbreviations, that you may see in the code:
-        og - original; cha - channel(s);
+        og - original; cha - channel(s); val - value;

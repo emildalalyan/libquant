@@ -136,9 +136,9 @@ CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
         }
         else
         {
-            slevel_t abs_sample = sltabs(samples[i]);
+            slevel_t absvalue = sltabs(samples[i]);
             
-            if(abs_sample > maxabs) maxabs = abs_sample;
+            if(absvalue > maxabs) maxabs = absvalue;
         }
     }
     
@@ -147,11 +147,11 @@ CFUNCTION slevel_t samples_findmaxabs(slevel_t* samples, size_t length)
 
 CFUNCTION int samples_compare(const slevel_t* first, const slevel_t* second)
 {
-    slevel_t val_first = *first;
-    slevel_t val_second = *second;
+    slevel_t firstval = *first;
+    slevel_t secondval = *second;
 
-    if(val_first == val_second) return 0;
-    else if(val_first > val_second) return 1;
+    if(firstval == secondval) return 0;
+    else if(firstval > secondval) return 1;
     else return -1;
 }
 

@@ -87,17 +87,14 @@ CFUNCTION int effect_extractchadiff(slevel_t* samples, size_t length, fheader* h
     for(omp_iter_t i = 0; i < length; i += channels)
     {
         double_t amean = 0;
-        // 'double_t' is most efficient floating-point
-        // type, at least as wide as double.
-        // This contains arithmetic mean (AM)
+        // This contains arithmetic mean
         // between samples of each channel.
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
             amean += (samples[i+ci]/(double_t)channels);
         }
-        // Calculating arithmetic mean between
-        // samples of each channel.
+        // Calculating arithmetic mean.
         
         for(uint64_t ci = 0; ci < channels; ci++)
         {
@@ -132,15 +129,14 @@ CFUNCTION int effect_amplifychadiff(slevel_t* samples, size_t length, fheader* h
     for(omp_iter_t i = 0; i < length; i += channels)
     {
         double_t amean = 0;
-        // This contains arithmetic mean (AM)
+        // This contains arithmetic mean
         // between samples of each channel.
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
             amean += (samples[i+ci]/(double_t)channels);
         }
-        // Calculating arithmetic mean between
-        // samples of each channel.
+        // Calculating arithmetic mean.
 
         for(uint64_t ci = 0; ci < channels; ci++)
         {
