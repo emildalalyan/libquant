@@ -3,7 +3,7 @@
 CFUNCTION int effect_speedup(slevel_t** samples, size_t* length, fheader* header, size_t chunksize, size_t remaining, interp_method fademethod)
 {
     /* Arguments processing ============= */
-    
+
     if(samples == NULL || (*samples) == NULL) return FUNC_INVALID_ARG;
     if(length == NULL || (*length) < 1) return FUNC_INVALID_ARG;
     if(header == NULL) return FUNC_INVALID_ARG;
@@ -14,7 +14,7 @@ CFUNCTION int effect_speedup(slevel_t** samples, size_t* length, fheader* header
 
     if(remaining > chunksize || oglength < chunksize) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
+    uint32_t channels = header->channels;
     if(channels < 1 || oglength % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
 

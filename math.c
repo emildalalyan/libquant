@@ -5,7 +5,7 @@
 CFUNCTION double math_interpolate(interp_method method, double y0, double y1, double pos)
 {
     if(y0 == y1 || pos == 0) return y0;
-    // In this cases any interpolation method will return y0.
+    // In these cases any interpolation method will return y0.
     
     switch(method)
     {

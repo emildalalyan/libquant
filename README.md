@@ -12,6 +12,8 @@ Current library development period is **Alpha**.
   - **Distortion** (clipping)
   - **Amplifying** (and auto-amplifying to maximum)
   - **Reverse**
+  - **Chorus** (experimental)
+  - **Flow effect**
   - **Quantization** (supports dithering)
   - **Inverting**
   - **Fade effect** (linear or sine)
@@ -29,7 +31,7 @@ Current library development period is **Alpha**.
   - **Noise** (pseudo-noise, uses rand())
   - **Sawtooth**
   - **Silence**
-  
+
 ### Limitations
 - Maximum number of channels is **(2^64)-1**
 - Maximum sample rate is **(2^64)-1 Hz**

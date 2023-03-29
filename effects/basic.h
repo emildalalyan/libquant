@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../samples.h"
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 
 /* Sound reverse effect.
 
@@ -32,4 +32,4 @@ CFUNCTION int effect_mixnoise(slevel_t* samples, size_t length, double noisevolu
 
    It moves samples from specified channel into resulting array,
    and then frees original array, changes its pointer and length. */
-CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* header, uint64_t chanumber);
+CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* header, uint32_t channelnum);

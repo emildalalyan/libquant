@@ -166,7 +166,7 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
 
     // ^^ This is the portable way to do abs. ^^
     // It works on any machine with any negative
-    // number representation.
+    // numbers representation.
     // Some compilers can optimize it, using some
     // two's complement hacks.
 }
@@ -174,7 +174,11 @@ CFUNCTION slevel_t sltabs(slevel_t sample)
 CFUNCTION slevel_t samples_median(slevel_t* samples, size_t length)
 {
     qsort(samples, length, sizeof(slevel_t), (int(*)(const void*, const void*))samples_compare);
-    return samples[length/2];
+    
+    slevel_t first = samples[(length/2)+(length%2)-1];
+    slevel_t second = samples[length/2];
+
+    return (first/2.0) + (second/2.0);
 }
 
 CFUNCTION slevel_t samples_armean(slevel_t* samples, size_t length)

@@ -6,7 +6,7 @@
 #include <float.h>
 
 #include "../math.h"
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 #include "../samples.h"
 
 /* Generates sinusoidal signal with specified frequency.
@@ -39,8 +39,8 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
 CFUNCTION int synth_silence(slevel_t** samples, size_t length);
 
 /* Generates noise.
-   
+
    All pseudo-random values goes from rand().
-   
+
    Pointer to samples array must be NULL. */
 CFUNCTION int synth_noise(slevel_t** samples, size_t length);

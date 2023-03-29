@@ -5,14 +5,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 #include "../samples.h"
 
 /* Mixdown audio to specified number of channels.
 
    Number of channels in header will be changed to provided value.
    Original samples array will be freed, and function will allocate new one. */
-CFUNCTION int effect_chamixdown(slevel_t** samples, fheader* header, size_t* length, uint64_t newchannels);
+CFUNCTION int effect_chamixdown(slevel_t** samples, fheader* header, size_t* length, uint32_t newchannels);
 
 /* Extract channel difference.
 

@@ -11,15 +11,14 @@ CFUNCTION int effect_meanfilter(slevel_t* samples, size_t length, fheader* heade
     // If window size is 1, then there is no neighboring samples.
     // Mean of one number is the same number.
 
-    uint64_t channels = header->channels;
-    
+    uint32_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
     
     if(windowsize > (length/channels)) return FUNC_INVALID_ARG;
     
     size_t windowright = windowsize/2;
-    size_t windowleft = (windowsize/2) + ((windowsize % 2) ? 1 : 0);
+    size_t windowleft = (windowsize/2) + (windowsize % 2);
     // They represent size of right and left
     // sides of the window respectively.
 
@@ -49,17 +48,12 @@ CFUNCTION int effect_meanfilter(slevel_t* samples, size_t length, fheader* heade
             #pragma omp for schedule(static)
             for(omp_iter_t i = loopstart; i < loopend; i++)
             {
-                for(size_t wi = 0; wi < windowleft; wi++)
+                omp_iter_t windowstart = i-loopstart;
+                for(size_t wi = 0; wi < windowsize; wi++)
                 {
-                    window[wi] = samples[i - (wi*channels)];
+                    window[wi] = samples[windowstart + (wi*channels)];
                 }
-                // Collecting samples from the left side.
-
-                for(size_t wi = 1; wi <= windowright; wi++)
-                {
-                    window[wi+(windowleft-1)] = samples[i + (wi*channels)];
-                }
-                // Collecting samples from the right side.
+                // Collecting samples into the window.
 
                 result[i] = meanfunction(window, windowsize);
                 // Result is the mean of samples from the window.

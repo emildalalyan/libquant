@@ -5,8 +5,8 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(header == NULL || file == NULL || samples == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
-    uint64_t samplerate = header->samplerate;
+    uint32_t channels = header->channels;
+    uint32_t samplerate = header->samplerate;
     uint16_t format = header->audioformat;
     uint16_t depth = header->samplesdepth;
 
@@ -15,7 +15,7 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     if(length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
 
-    if(channels > UINT16_MAX || samplerate > UINT32_MAX) return FUNC_UNSUPPORTED;
+    if(channels > UINT16_MAX) return FUNC_UNSUPPORTED;
     // In WAV files maximum possible number of channels is 65535,
     // and maximum possible sample rate is (2^32)-1 Hz.
 
@@ -49,8 +49,8 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
 
     uint16_t format_le = format;
     uint16_t depth_le = depth;
-    uint64_t channels_le = channels;
-    uint64_t samplerate_le = samplerate;
+    uint32_t channels_le = channels;
+    uint32_t samplerate_le = samplerate;
 
     uint32_t byterate_le;
     switch(format)
@@ -76,8 +76,8 @@ CFUNCTION int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, 
     #if ENDIANNESS == ORDER_BE
         format_le = swap_16b(format);
         depth_le = swap_16b(depth);
-        channels_le = swap_64b(channels);
-        samplerate_le = swap_64b(samplerate);
+        channels_le = swap_32b(channels);
+        samplerate_le = swap_32b(samplerate);
         byterate_le = swap_32b(byterate_le);
         sampleslength_le = swap_16b(sampleslength_le);
     #endif
@@ -436,7 +436,7 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
                 return FUNC_IO_ERROR;
             // In RIFF containers, each chunk (after its signature)
             // contains its size (in bytes).
-            
+
             #if ENDIANNESS == ORDER_BE
                 size = swap_32b(size);
             #endif
@@ -460,14 +460,14 @@ CFUNCTION int wav_read_header(wav_header* header, FILE* file)
 
     #if ENDIANNESS == ORDER_BE
         tmpheader.audioformat = swap_16b(tmpheader.audioformat);
-        tmpheader.channels = swap_64b(tmpheader.channels);
+        tmpheader.channels = swap_32b(tmpheader.channels);
         tmpheader.samplesdepth = swap_16b(tmpheader.samplesdepth);
         tmpheader.sampleslength = swap_16b(tmpheader.sampleslength);
         tmpheader.byterate = swap_32b(tmpheader.byterate);
         tmpheader.datasize = swap_32b(tmpheader.datasize);
         tmpheader.filesize = swap_32b(tmpheader.filesize);
         tmpheader.fmtchunksize = swap_32b(tmpheader.fmtchunksize);
-        tmpheader.samplerate = swap_64b(tmpheader.samplerate);
+        tmpheader.samplerate = swap_32b(tmpheader.samplerate);
     #endif
 
     *header = tmpheader;
@@ -482,7 +482,7 @@ CFUNCTION int wav_read_samples(wav_header* header, FILE* file, slevel_t** sample
     if(wav_check_signatures(header) == FUNC_SIGNATURE_FAILURE)
         return FUNC_SIGNATURE_FAILURE;
 
-    uint64_t channels = header->channels;
+    uint32_t channels = header->channels;
     uint16_t format = header->audioformat;
     uint16_t depth = header->samplesdepth;
     uint32_t datasize = header->datasize;

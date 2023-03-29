@@ -29,7 +29,7 @@
 /* This is the type of sample levels. It must be signed integer type. */
 typedef int32_t slevel_t;
 
-/* Defining range of level type */
+/* Sample level type range definitions ====== */
 
 /* Minimum possible integer, that may be stored in slevel_t. */
 #define SLEVEL_MIN INT32_MIN
@@ -45,14 +45,14 @@ typedef int32_t slevel_t;
    else output = input; \
 }
 
-/* ============================ */
+/* =========================================== */
 
 /* Length of slevel_t integer (in bits). */
 #define SLEVEL_BIT_DEPTH 32
 
 /* Format, that may be used in following
    functions: printf for displaying slevel_t value. */
-#define SLEVEL_FORMAT PRIi32
+#define SLEVEL_FMT PRIi32
 
 #define INT24_MAX 8388607
 #define INT24_MIN -8388608
@@ -127,12 +127,14 @@ CFUNCTION slevel_t sltabs(slevel_t sample);
 
 /* Definition of the mean functions type.
 
-   These function calculate mean of the samples.
+   These functions calculate mean of the samples.
 
    All of these functions DO NOT check array pointer and length. */
 typedef slevel_t(*mean_func_t)(slevel_t*, size_t);
 
-/* Calculate median of the provided samples. */
+/* Calculate median of the provided samples.
+
+   This function WILL sort given samples. */
 CFUNCTION slevel_t samples_median(slevel_t* samples, size_t length);
 
 /* Calculate arithmetic mean of the provided samples.

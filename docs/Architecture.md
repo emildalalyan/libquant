@@ -10,7 +10,7 @@ Library consists of following parts:
   - **[samples.h](../samples.h)**: This file defines <code>slevel_t</code> - type of the samples, by default it's 32-bit wide (alias for <code>uint32_t</code>), but the code is written in way, that <code>slevel_t</code> can be signed integer type of **any** length.
   - **[build.h](../build.h)**: It provides useful macros, for detection compiler/library/language standard versions, and macros for using non-standard compiler extensions, if they're supported, otherwise these macros will be just stubs.
   - **[c99defs.h](../c99defs.h)**: This file has some definitions and functions from C99 standard. It intended for compilers, that support C++11/C99 only partionally (for example Microsoft Visual C++ 2010).
-  - **[fheaders.h](../io/fheaders.h)**: It defines common file header. All file header structures should be compatible with it.
+  - **[fheader.h](../io/fheader.h)**: It defines common file header. All file header structures should be compatible with it.
   - **[functions.h](../functions.h)**: It's just function statuses enumeration.
   - **[openmp.h](../openmp.h)**: Defines iterator type - <code>omp_iter_t</code>, that depends on the OpenMP standard version.
 - Auxillary files, providing some useful functions.

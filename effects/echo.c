@@ -11,17 +11,17 @@ CFUNCTION int effect_echo(slevel_t* samples, size_t length, fheader* header, siz
     if(feedback == 0) return FUNC_OK;
     // In this case, there will be no echo.
 
-    uint64_t channels = header->channels;
+    uint32_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
 
     if(delay > (length/channels)) return FUNC_OK;
-    // In this case, audio signal will end before we
+    // In this case, main audio signal will end before we
     // would hear a delayed signal, so we won't hear it.
     
     /* ================================== */
 
-    /* Feedback Lookup table ============ */
+    /* Feedback lookup table ============ */
 
     double* feedb_lut = (double*)malloc(bounces * sizeof(double));
     // We're creating feedbacks lookup table (LUT)
@@ -80,7 +80,7 @@ CFUNCTION int effect_delay(slevel_t* samples, size_t length, fheader* header, si
     if(volume == 0) return FUNC_OK;
     // In this case, delayed sound will be muted.
 
-    uint64_t channels = header->channels;
+    uint32_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
 

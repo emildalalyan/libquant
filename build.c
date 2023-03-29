@@ -57,6 +57,6 @@ CFUNCTION const char* libquant_getarchname()
 CFUNCTION const char* libquant_getdatetime()
 {
     const char* datetimestr = __DATE__ " " __TIME__;
-    
+
     return datetimestr;
 }

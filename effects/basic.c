@@ -6,7 +6,7 @@ CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
 
     if(samples == NULL || header == NULL) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
+    uint32_t channels = header->channels;
     if(channels < 1 || length % channels) return FUNC_INVALID_ARG;
     // Number of samples in each channel must be the same.
 
@@ -18,12 +18,12 @@ CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
     if(result == NULL) return FUNC_MEMALLOC_FAILED;
 
     size_t lastsample = length - 1;
-    uint64_t lastchannel = channels - 1;
+    uint32_t lastchannel = channels - 1;
 
-    #pragma omp parallel for schedule(static)
+    #pragma omp parallel for schedule(static) collapse(2)
     for(omp_iter_t i = 0; i < length; i += channels)
     {
-        for(uint64_t ci = 0; ci < channels; ci++)
+        for(uint32_t ci = 0; ci < channels; ci++)
         {
             result[i+ci] = samples[(lastsample-i)-(lastchannel-ci)];
         }
@@ -94,14 +94,14 @@ CFUNCTION int effect_mixnoise(slevel_t* samples, size_t length, double noisevolu
     return FUNC_OK;
 }
 
-CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* header, uint64_t channelnum)
+CFUNCTION int effect_selectchannel(slevel_t** samples, size_t* length, fheader* header, uint32_t channelnum)
 {
     /* Arguments processing ============= */
 
     if(samples == NULL || (*samples) == NULL || length == NULL || header == NULL)
         return FUNC_INVALID_ARG;
 
-    uint64_t ogchannels = header->channels;
+    uint32_t ogchannels = header->channels;
     slevel_t* ogsamples = (*samples);
     size_t oglength = (*length);
 

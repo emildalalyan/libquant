@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include "fheaders.h"
+#include "fheader.h"
 #include "../samples.h"
 #include "../endianness.h"
 
@@ -73,10 +73,10 @@ typedef struct wav_header
    /* Compatibility with fheader */
 
    /* Number of audio channels. */
-   uint64_t channels;
+   uint32_t channels;
 
    /* Sample rate of the track. */
-   uint64_t samplerate;
+   uint32_t samplerate;
 
    /* ========================= */
 

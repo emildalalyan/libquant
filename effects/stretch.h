@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 #include "../samples.h"
 
 /* Produces audio speed-up, without changing sound pitch.

@@ -96,7 +96,7 @@ typedef struct program_ver
 
 #if !defined(DO_PRAGMA)
     #define DO_PRAGMA(x) _Pragma(#x)
-    // Concatenation of the strings are doing after
+    // Concatenation of the strings is doing after
     // execution of preprocessor, so we use "#x" feature
     // (get string representation of expression)
     // to bypass concatenation.

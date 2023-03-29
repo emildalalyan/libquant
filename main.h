@@ -14,22 +14,22 @@
 /* Definitions ========================== */
 
 /* Count the time of expression execution, and
-   write the result to "counted" variable (of type "double").
+   write the result to "counter" variable (of type "double").
    It will be measured in seconds. */
 #if defined(_WIN32)
-    #define COUNTTIME(expression, counted) \
+    #define COUNTTIME(expression, counter) \
     { \
         clock_t start = clock(); \
         expression; \
-        counted = ((double)clock()-start)/CLOCKS_PER_SEC; \
+        counter = ((double)clock()-start)/CLOCKS_PER_SEC; \
     }
     // In Windows, clock() returns process life time.
 #else
-    #define COUNTTIME(expression, counted) \
+    #define COUNTTIME(expression, counter) \
     { \
         time_t start = time(NULL); \
         expression; \
-        counted = difftime(time(NULL), start); \
+        counter = difftime(time(NULL), start); \
     }
     // In other systems, clock() returns CPU time (of all threads),
     // that has been spent on process execution,
@@ -52,7 +52,7 @@
 
 /* Input/output ========================= */
 
-#include "io/fheaders.h"
+#include "io/fheader.h"
 #include "io/wav.h"
 
 /* ====================================== */
@@ -64,7 +64,7 @@
 #include "effects/volume.h"
 #include "effects/basic.h"
 #include "effects/echo.h"
-#include "effects/phaser.h"
+#include "effects/modulation.h"
 #include "effects/compressor.h"
 #include "effects/filters.h"
 #include "effects/stretch.h"

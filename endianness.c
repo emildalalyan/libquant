@@ -6,7 +6,7 @@
 CFUNCTION uint16_t swap_16b(uint16_t num)
 {
     #if (defined(ARCH_X86) || defined(ARCH_X86_64)) && defined(SUPPORTS_GCC)
-        uint32_t result = 0;
+        uint16_t result = 0;
         __asm__("rol $8, %%ax" : "=a"(result) : "a"(num));
 
         return result;

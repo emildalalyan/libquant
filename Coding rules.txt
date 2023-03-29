@@ -17,8 +17,13 @@
     If C++ compiler is used, it avoids C++ name mangling.
 
 7.  Functions, that use OpenMP should work without enabling OpenMP (it's necessary for
-    compatibility with compilers, that support C99, but don't support OpenMP).
+    compatibility with compilers, that don't support OpenMP).
 
-8.  Some abbreviation are allowed. If you using it, then you have to specify it here.
-    Abbreviations, that you may see in the code:
-        og - original; cha - channel(s); val - value;
+8.  Some abbreviations are allowed. If you using them, then you have to specify them here.
+    Abbreviations, that you can see in the code:
+        > og - original
+        > cha - channel(s)
+        > val - value
+        > fmt - format(s)
+        > freq - frequency
+        > lut - lookup table

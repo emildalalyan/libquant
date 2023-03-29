@@ -13,8 +13,8 @@ CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header,
     if((*samples) != NULL || samples == NULL || header == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
-    uint64_t samplerate = header->samplerate;
+    uint32_t channels = header->channels;
+    uint32_t samplerate = header->samplerate;
 
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
     if(length % channels) return FUNC_INVALID_ARG;
@@ -33,7 +33,7 @@ CFUNCTION int synth_sinusoid(slevel_t** samples, size_t length, fheader* header,
     {
         slevel_t sample = f64toslt(sin(i*step));
 
-        for(uint64_t ci = 0; ci < channels; ci++)
+        for(uint32_t ci = 0; ci < channels; ci++)
         {
             result[i+ci] = sample;
         }
@@ -49,8 +49,8 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     if((*samples) != NULL || samples == NULL || header == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
-    uint64_t samplerate = header->samplerate;
+    uint32_t channels = header->channels;
+    uint32_t samplerate = header->samplerate;
 
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
     if(length % channels) return FUNC_INVALID_ARG;
@@ -69,7 +69,7 @@ CFUNCTION int synth_sawtooth(slevel_t** samples, size_t length, fheader* header,
     {
         double sample = ((fmod(i/channels, period)) - (period/2)) * (SLEVEL_MAX/(period/2));
 
-        for(uint64_t ci = 0; ci < channels; ci++)
+        for(uint32_t ci = 0; ci < channels; ci++)
         {
             SLEVEL_CLIPPING(sample, result[i+ci]);
             // Floating-point numbers are inaccurate so we have to
@@ -87,8 +87,8 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
     if((*samples) != NULL || samples == NULL || header == NULL) return FUNC_INVALID_ARG;
     if(length < 1) return FUNC_INVALID_ARG;
 
-    uint64_t channels = header->channels;
-    uint64_t samplerate = header->samplerate;
+    uint32_t channels = header->channels;
+    uint32_t samplerate = header->samplerate;
     
     if(channels < 1 || samplerate < 1) return FUNC_INVALID_ARG;
     if(length % channels) return FUNC_INVALID_ARG;
@@ -108,7 +108,7 @@ CFUNCTION int synth_square(slevel_t** samples, size_t length, fheader* header, d
     {
         slevel_t sample = (fmod((i/channels), period) >= (period/2)) ? SLEVEL_MAX : SLEVEL_MIN;
 
-        for(uint64_t ci = 0; ci < channels; ci++)
+        for(uint32_t ci = 0; ci < channels; ci++)
         {
             result[i+ci] = (slevel_t)sample;
         }

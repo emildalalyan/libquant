@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../samples.h"
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 
 /* Mean filter effect.
 

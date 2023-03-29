@@ -57,9 +57,9 @@ typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 
 typedef unsigned long long size_t;
-// If address bus width of target computer is not 64-bit,
-// then YOU HAVE TO EDIT THIS DEFINITION, and enter right type
-// (i.e type, which length is the same as address bus width).
+// If address bus width of target computer
+// doesn't match to unsigned long long length,
+// then YOU HAVE TO ENTER CORRESPONDING TYPE.
 
 /* ==================================== */
 

@@ -6,7 +6,7 @@
 
 #include "../math.h"
 #include "../samples.h"
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 
 /* Single-band peak-sensing compressor effect.
    It produces downward compression (i.e it decreases the volume by the ratio when absolute value of sample becomes higher than threshold).

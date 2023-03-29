@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "../samples.h"
 #include "basic.h"
-#include "../io/fheaders.h"
+#include "../io/fheader.h"
 #include "../math.h"
 
 /* Produces quantization effect.
