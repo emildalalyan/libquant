@@ -64,5 +64,5 @@ This program reads **in.wav**, does echo effect, and then saves it to **out.wav*
     }
 ```
 
-### Languages support
+### Language support
 libquant is written in C, so you can call libquant functions from any language, that have C [FFI](https://en.wikipedia.org/wiki/Foreign_function_interface).
