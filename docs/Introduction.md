@@ -1,4 +1,4 @@
-## [<- Back to the main page](main.md)
+## [<- Back to the main page](Main.md)
 
 ## Introduction to the libquant
 
@@ -69,4 +69,4 @@ This program reads **in.wav**, does echo effect, and then saves it to **out.wav*
 ```
 
 ### Language support
-libquant is written in C, so you can call libquant functions from any language, that have C [FFI](https://en.wikipedia.org/wiki/Foreign_function_interface).
+libquant is written in C, so you can call libquant functions from any language, that has C [FFI](https://en.wikipedia.org/wiki/Foreign_function_interface).

@@ -1,8 +1,8 @@
 ## This is the main page of libquant documentation
 **NOTE**: Library is in alpha stage, so API can change later.
 
-- For the beginning, check [Introduction](introduction.md)
-- [Architecture of the library](architecture.md)
+- For the beginning, check [Introduction](Introduction.md)
+- [Architecture of the library](Architecture.md)
 
 ## Functions
 - [Functions for samples conversions (samples.h)](functions/samples.md)

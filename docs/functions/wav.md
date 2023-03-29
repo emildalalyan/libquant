@@ -28,7 +28,7 @@ Function will do following things:
 - allocating memory for samples array and set address of specified pointer.
 - setting the length of samples array.
 
-See [this example](../introduction.md#simple-example-program) for better understanding.
+See [this example](../Introduction.md#simple-example-program) for better understanding.
 
 ### <code>int wav_write_file(wav_header* header, FILE* file, slevel_t* samples, size_t length)</code>
 - <code>header</code>: Pointer to header structure.
