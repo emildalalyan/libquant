@@ -25,6 +25,6 @@ Alias for <code>enum interp_method</code>. It includes following items:
 
 ### Math constants
 
-- <code>MATH_PI = 3.1415926535897932</code>: [$\pi$ constant](https://en.wikipedia.org/wiki/Pi). 
+- <code>MATH_PI = 3.1415926535897932</code>: [Pi constant](https://en.wikipedia.org/wiki/Pi). 
 - <code>MATH_E = 2.71828</code>: [Euler's number](https://en.wikipedia.org/wiki/E_(mathematical_constant))
 - <code>MATH_LOG2_10 = 3.32193</code>: Computed $log_{2} 10$ value.
