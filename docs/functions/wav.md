@@ -1,4 +1,4 @@
-## [<- Back to the main page](../main.md)
+## [<- Back to the main page](../Main.md)
 
 ## WAV reader/writer functions ([wav.h](../../io/wav.h))
 

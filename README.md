@@ -51,7 +51,7 @@ Current library development period is **Alpha**.
 
 **Remark**: Some compilers, that support C++11 **partially** also can compile libquant.
 ### Documentation
-See [main page of the documentation](docs/main.md)
+See [main page of the documentation](docs/Main.md)
 
 ### Donate
 :credit_card: If someone wants to **support** me or my project, then the link to **DonationAlerts** is [**here**](https://donationalerts.com/r/emildalalyan)

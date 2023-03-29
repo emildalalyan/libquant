@@ -1,4 +1,4 @@
-## [<- Back to the main page](../main.md)
+## [<- Back to the main page](../Main.md)
 
 ## Functions for samples conversions ([samples.h](../samples.h))
 
