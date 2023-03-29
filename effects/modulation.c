@@ -30,6 +30,7 @@ CFUNCTION int effect_chorus(slevel_t* samples, size_t length, fheader* header, s
     size_t lut_length = (samplerate/freq);
 
     double* sine_lut = (double*)malloc(lut_length * sizeof(double));
+    if(sine_lut == NULL) return FUNC_MEMALLOC_FAILED;
 
     for(size_t i = 0; i < lut_length; i++)
     {
