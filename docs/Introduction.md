@@ -1,4 +1,4 @@
-## [<- Back to the main page](Main.md)
+## [<- Back to the main page](main.md)
 
 ## Introduction to the libquant
 
@@ -59,6 +59,10 @@ This program reads **in.wav**, does echo effect, and then saves it to **out.wav*
     /* Freeing memory ======== */
         printf("Freeing the memory: %s\n",
             (samples_free(&samples) == FUNC_OK) ? "Done!" : "Failed.");
+
+    /* Closing the files ===== */
+        fclose(inputfile);
+        fclose(outputfile);
 
         return 0;
     }

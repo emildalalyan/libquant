@@ -1,4 +1,4 @@
-## [<- Back to the main page](Main.md)
+## [<- Back to the main page](main.md)
 
 ## Library architecture
 
