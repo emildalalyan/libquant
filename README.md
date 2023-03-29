@@ -34,7 +34,7 @@ Current library development period is **Alpha**.
 
 ### Limitations
 - Maximum number of channels is **(2^32)-1**
-- Maximum sample rate is **(2^64)-1 Hz**
+- Maximum sample rate is **(2^32)-1 Hz**
 - Number of samples is storing as *size_t*, its width **depends on platform.**
 - Each channel must have the same number of samples.
 
