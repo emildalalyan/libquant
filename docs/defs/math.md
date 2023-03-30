@@ -11,7 +11,7 @@ Alias for <code>enum interp_method</code>. It includes following items:
     
 - <code>INTERPOLATION_LINEAR</code>: **Linear interpolation** method.
 
-    It has following formula: $y = y_{0}+((y_{1}-y_{0})\times(x-x_{0}/x_{1}-x_{0}))$
+    It has following formula: $y = y_{0}+((y_{1}-y_{0})\times((x-x_{0})/(x_{1}-x_{0})))$
     
     *Link on Wikipedia is [here](https://en.wikipedia.org/wiki/Linear_interpolation)*
 
