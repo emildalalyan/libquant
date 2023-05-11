@@ -1,5 +1,4 @@
-1.  If function returns a status, type of that status must be "int", and it must return one of the value from "enum func_status" (see samples.h)
-    But if the function returns its output, then error must be written in "errno" variable.
+1.  If function returns a status, type of that status must be "int", and it must return one of the value from "enum func_status" (see samples.h) 
 
 2.  Don't use unsigned char, short, int, long long, etc where you need exact length, these types vary from the system.
     Use uint8_t, int16_t, int32_t, int64_t, etc instead.
@@ -19,7 +18,7 @@
 7.  Functions, that use OpenMP should work without enabling OpenMP (it's necessary for
     compatibility with compilers, that don't support OpenMP).
 
-8.  Some abbreviations are allowed. If you using them, then you have to specify them here.
+8.  Some abbreviations are allowed. If you're using them, then you have to specify them here.
     Abbreviations, that you can see in the code:
         > og - original
         > cha - channel(s)
@@ -27,3 +26,4 @@
         > fmt - format(s)
         > freq - frequency
         > lut - lookup table
+        > defs - definitions
