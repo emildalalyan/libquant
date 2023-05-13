@@ -67,4 +67,6 @@ typedef unsigned long long size_t;
 
 double log2(double x);
 
+double fmin(double x, double y);
+
 /* ==================================== */

@@ -16,4 +16,11 @@
         // 2) log_a(b) = 1/log_b(a)
     }
 
+	double fmin(double x, double y)
+	{
+		return (x > y) ? x : y;
+		// This implementation is not fastest,
+		// but it's portable.
+	}
+
 #endif
