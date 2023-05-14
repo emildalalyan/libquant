@@ -20,7 +20,7 @@ CFUNCTION int effect_reverse(slevel_t* samples, fheader* header, size_t length)
     size_t lastsample = length - 1;
     uint32_t lastchannel = channels - 1;
 
-    #pragma omp parallel for schedule(static) collapse(2)
+    #pragma omp parallel for schedule(static)
     for(omp_iter_t i = 0; i < length; i += channels)
     {
         for(uint32_t ci = 0; ci < channels; ci++)
