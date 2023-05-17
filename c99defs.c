@@ -18,7 +18,7 @@
 
     double fmin(double x, double y)
     {
-        return (x > y) ? x : y;
+        return (x < y) ? x : y;
         // This implementation is not fastest,
         // but it's portable.
     }
